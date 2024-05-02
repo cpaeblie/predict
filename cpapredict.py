@@ -60,7 +60,7 @@ def stats_features(input_data):
     #print(inp)
     return inp
 import pandas as pd
-zymuno_df = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predict/main/ad%20final.csv', delimiter=',')
+zymuno_df = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/main/ad%20final.csv', delimiter=',')
 df_ori = zymuno_df
 df_ori['Date'] = pd.to_datetime(df_ori['Date'])
 df_X = df_ori[['Cost','CPC (Destination)','CPM','Impression','Clicks (Destination)','CTR (Destination)','Conversions','CPA','CPA']]
