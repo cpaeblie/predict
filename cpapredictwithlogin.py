@@ -1,190 +1,136 @@
-import numpy as np
+import streamlit as st
 import pandas as pd
-from math import sqrt
+import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestRegressor
-import math
-from sklearn.metrics import mean_squared_error
-from numpy import array
-from sklearn.neural_network import MLPRegressor
-from sklearn.neighbors import KNeighborsRegressor
-from scipy.stats import pearsonr
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.svm import SVC
-from sklearn.svm import SVR
-import csv
-from sklearn import preprocessing
-from sklearn.model_selection import train_test_split
-from sklearn import metrics
-from sklearn.metrics import mean_squared_log_error
-from numpy import array
-from scipy.stats import kurtosis, skew
-def split_sequences(sequences, n_steps_in, n_steps_out):
-	X, y = list(), list()
-	for i in range(len(sequences)):
-		# find the end of this pattern
-		end_ix = i + n_steps_in
-		out_end_ix = end_ix + n_steps_out
-		# check if we are beyond the dataset
-		if out_end_ix > len(sequences):
-			break
-		# gather input and output parts of the pattern
-		seq_x, seq_y = sequences[i:end_ix, :-1], sequences[out_end_ix - 1, -1]
-		X.append(seq_x)
-		y.append(seq_y)
-	return array(X), array(y)
-def stats_features(input_data):
-    inp = list()
-    for i in range(len(input_data)):
-        inp2=list()
-        inp2=input_data[i]
-        min=float(np.min(inp2))
-        max=float(np.max(inp2))
-        diff=(max-min)
-        std=float(np.std(inp2))
-        mean=float(np.mean(inp2))
-        median=float(np.median(inp2))
-        kurt=float(kurtosis(inp2))
-        sk=float(skew(inp2))
-        inp2=np.append(inp2,min)
-        inp2=np.append(inp2,max)
-        inp2=np.append(inp2,diff)
-        inp2=np.append(inp2,std)
-        inp2=np.append(inp2,mean)
-        inp2=np.append(inp2,median)
-        inp2=np.append(inp2,kurt)
-        inp2=np.append(inp2,sk)
-        #print(list(inp2))
-        inp=np.append(inp,inp2)
-    inp=inp.reshape(len(input_data),-1)
-    #print(inp)
-    return inp
-import pandas as pd
-zymuno_df = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/main/ad%20final.csv', delimiter=',')
-df_ori = zymuno_df
-df_ori['Date'] = pd.to_datetime(df_ori['Date'])
-df_X = df_ori[['Cost','CPC (Destination)','CPM','Impression','Clicks (Destination)','CTR (Destination)','Conversions','CPA','CPA']]
-in_seq = df_X.astype(float).values
-#out_seq = df_y.astype(float).values
-
-#in_seq1 = in_seq.reshape(in_seq.shape[0], in_seq.shape[1])
-#out_seq = out_seq.reshape((len(out_seq), 1))
-
-#from numpy import hstack
-#dataset = hstack((in_seq1, out_seq))
-
-
-n_steps_in, n_steps_out = 4, 1
-X, y = split_sequences(in_seq, n_steps_in, n_steps_out)
-
-n_input = X.shape[1] * X.shape[2]
-X = X.reshape((X.shape[0], n_input))
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, shuffle = False)
-X_train = stats_features(X_train)
-X_test = stats_features(X_test)
-
-
-df_new=df_ori[['Date','CPA']]
-df_new.set_index('Date')
-
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
 
-imputer = SimpleImputer(strategy='mean')
+# Simulated user database
+user_db = {}
 
-X_train_imputed = imputer.fit_transform(X_train)
-X_test_imputed = imputer.transform(X_test)
-X_train_no_nan = X_train[~np.isnan(X_train).any(axis=1)]
-X_test_no_nan = X_test[~np.isnan(X_test).any(axis=1)]
+# Function for user registration
+def register_user(username, password):
+    if username in user_db:
+        return False
+    user_db[username] = password
+    return True
 
-y_train_no_nan = y_train[~np.isnan(y_train)]
-y_test_no_nan = y_test[~np.isnan(y_test)]
-from sklearn.model_selection import train_test_split
+# Function for user login
+def login_user(username, password):
+    return user_db.get(username) == password
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Load dataset
+def load_data():
+    zymuno_df = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/main/ad%20final.csv', delimiter=',')
+    zymuno_df['Date'] = pd.to_datetime(zymuno_df['Date'])
+    return zymuno_df
 
-X_train_no_nan = X_train[~np.isnan(X_train).any(axis=1)]
-X_test_no_nan = X_test[~np.isnan(X_test).any(axis=1)]
+# Function to display dataset
+def display_dataset(df):
+    st.write(df)
 
-y_train_no_nan = y_train[~np.isnan(y_train)]
-y_test_no_nan = y_test[~np.isnan(y_test)]
-import streamlit as st
-import numpy as np
-from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import RandomizedSearchCV
-# Create the title and description
+# Function to plot history
+def plot_history(df):
+    st.line_chart(df.set_index('Date'))
+
+# Main application logic
 st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
 st.title("CPA Prediction App 🔎")
-st.write("""
-This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features (Cost, CPC (Destination), CPM, Impression, Clicks (Destination), CTR (Destination), Conversions, CPA) for the 4 days before tomorrow.
-""")
-st.write("""
-Enter the Cost, CPC (Destination), CPM, Impression, Clicks (Destination), CTR (Destination), Conversions, and CPA at Day 1 until Day 4 (Don't forget to recheck again before click the button!):
-""")
-# Create the input widgets for the new name
-new_name_inputs = []
-with st.form("cpa_form"):
-    for i in range(32):
-        day = (i // 8) + 1
-        metric = i % 8
-        if metric == 0:
-            metric = "Cost"
-        elif metric == 1:
-            metric = "CPC (Destination)"
-        elif metric == 2:
-            metric = "CPM"
-        elif metric == 3:
-            metric = "Impression"
-        elif metric == 4:
-            metric = "Clicks (Destination)"
-        elif metric == 5:
-            metric = "CTR (Destination)"
-        elif metric == 6:
-            metric = "Conversions"
+
+menu = st.sidebar.selectbox("Select Menu", ["Login", "Register", "Dashboard"])
+
+if menu == "Register":
+    st.subheader("Register")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type='password')
+    if st.button("Register"):
+        if register_user(username, password):
+            st.success("User  registered successfully!")
         else:
-            metric = "CPA"
-        new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i+32}')
-        new_name_inputs.append(new_name_input)
-    if st.form_submit_button("Predict The CPA!"):
-        # Get the input values
-        new_name = np.array([float(new_name_input) for new_name_input in new_name_inputs]).reshape(-1, X_test.shape[1])
+            st.warning("Username already exists.")
 
-        # Scale the input features
-        scaler = StandardScaler().fit(X_train_no_nan)
-        X_train_scaled = scaler.transform(X_train_no_nan)
-        X_test_scaled = scaler.transform(new_name)
+elif menu == "Login":
+    st.subheader("Login")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type='password')
+    if st.button("Login"):
+        if login_user(username, password):
+            st.success("Logged in successfully!")
+            st.session_state.logged_in = True
+        else:
+            st.warning("Incorrect username or password.")
 
-        # Define the hyperparameter distribution
-        param_dist = {
-            'n_estimators': [10, 50, 100, 200, 500],
-            'max_depth': [None, 10, 20, 30, 40, 50],
-            'min_samples_split': [2, 5, 10, 20, 30],
-            'min_samples_leaf': [1, 2, 4, 8, 16]
-        }
+elif menu == "Dashboard":
+    if st.session_state.get("logged_in"):
+        st.subheader("Dashboard")
+        df = load_data()
+        
+        # Display History
+        st.header("History")
+        plot_history(df[['Date', 'CPA']])
+        
+        # Display Dataset
+        st.header("Dataset")
+        display_dataset(df)
 
-        # Initialize the Random Forest Regressor model
-        model = RandomForestRegressor(random_state=42)
+        # Recent Page for CPA Prediction
+        st.header("CPA Prediction")
+        new_name_inputs = []
+        with st.form("cpa_form"):
+            for i in range(32):
+                day = (i // 8) + 1
+                metric = ["Cost", "CPC (Destination)", "CPM", "Impression", 
+                          "Clicks (Destination)", "CTR (Destination)", 
+                          "Conversions", "CPA"][i % 8]
+                new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i+32}')
+                new_name_inputs.append(new_name_input)
+            if st.form_submit_button("Predict The CPA!"):
+                new_name = np.array([float(new_name_input) for new_name_input in new_name_inputs]).reshape(1, -1)
+                
+                # Preprocessing
+                X = df[['Cost', 'CPC (Destination)', 'CPM', 'Impression', 
+                         'Clicks (Destination)', 'CTR (Destination)', 
+                         'Conversions']].values
+                y = df['CPA'].values
 
-        # Perform hyperparameter tuning using RandomizedSearchCV
-        random_search = RandomizedSearchCV(estimator=model, param_distributions=param_dist, cv=5, scoring='neg_mean_squared_error', verbose=0, n_iter=20)
-        random_search.fit(X_train_scaled, y_train_no_nan)
+                X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+                imputer = SimpleImputer(strategy='mean')
+                X_train_imputed = imputer.fit_transform(X_train)
+                scaler = StandardScaler().fit(X_train_imputed)
+                X_train_scaled = scaler.transform(X_train_imputed)
+                
+                                # Model Training
+                model = RandomForestRegressor(random_state=42)
+                param_dist = {
+                    'n_estimators': [10, 50, 100],
+                    'max_depth': [None, 10, 20],
+                    'min_samples_split': [2, 5],
+                    'min_samples_leaf': [1, 2]
+                }
+                
+                # Perform hyperparameter tuning using RandomizedSearchCV
+                random_search = RandomizedSearchCV(estimator=model, param_distributions=param_dist, cv=5)
+                random_search.fit(X_train_scaled, y_train)
 
-        # Extract the best model and fit it to the training data
-        best_model = random_search.best_estimator_
-        best_model.fit(X_train_scaled, y_train_no_nan)
+                # Extract the best model and fit it to the training data
+                best_model = random_search.best_estimator_
+                best_model.fit(X_train_scaled, y_train)
 
-        # Make predictions on the test data
-        y_pred = best_model.predict(X_test_scaled)
-        y_pred = np.round(y_pred, 0)
+                # Scale the new input features
+                new_name_scaled = scaler.transform(new_name)
 
-        # Display the predictions in the sidebar
-        st.sidebar.write("Tomorrow's CPA Prediction:")
-        st.sidebar.write(y_pred)
+                # Make predictions
+                y_pred = best_model.predict(new_name_scaled)
+                y_pred = np.round(y_pred, 0)
 
-st.write("""
-Please refresh the website if you want input new values
-""")
+                # Display the predictions
+                st.sidebar.write("Tomorrow's CPA Prediction:")
+                st.sidebar.write(y_pred)
 
-	    
+    else:
+        st.warning("Please log in to access the dashboard.")
+
+# Footer
 st.caption('Copyright (c) PT Ebliethos Indonesia 2024')
