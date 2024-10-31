@@ -8,3 +8,5 @@ scikit-learn
 pytesseract
 opencv-python-headless
 Pillow
+setuptools>=42
+wheel
