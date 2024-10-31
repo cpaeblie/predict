@@ -125,7 +125,7 @@ Enter the Cost, CPC (Destination), CPM, Impression, Clicks (Destination), CTR (D
 # Create the input widgets for the new name
 new_name_inputs = []
 with st.form("cpa_form"):
-        for i in range(16):
+    for i in range(16):
         day = (i // 4) + 1
         metric = i % 4
         if metric == 0:
@@ -134,13 +134,15 @@ with st.form("cpa_form"):
             metric = "CPC (Destination)"
         elif metric == 2:
             metric = "CPM"
-        else:  # Corrected indentation here
+        else:
             metric = "CTR (Destination)"
+        
         new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i+16}')
         new_name_inputs.append(new_name_input)
     if st.form_submit_button("Predict The CPA!"):
         # Get the input values
         new_name = np.array([float(new_name_input) for new_name_input in new_name_inputs]).reshape(-1, X_test.shape[1])
+        # Remaining code...
 
         # Scale the input features
         scaler = StandardScaler().fit(X_train_no_nan)
