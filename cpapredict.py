@@ -63,7 +63,7 @@ import pandas as pd
 zymuno_df = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/main/ad%20final.csv', delimiter=',')
 df_ori = zymuno_df
 df_ori['Date'] = pd.to_datetime(df_ori['Date'])
-df_X = df_ori[['Cost','CPC (Destination)','CPM','Impression','Clicks (Destination)','CTR (Destination)','Conversions','CPA','CPA']]
+df_X = df_ori[['Cost','CPC (Destination)','CPM','CTR (Destination)','CPA']]
 in_seq = df_X.astype(float).values
 #out_seq = df_y.astype(float).values
 
@@ -125,7 +125,7 @@ Enter the Cost, CPC (Destination), CPM, Impression, Clicks (Destination), CTR (D
 # Create the input widgets for the new name
 new_name_inputs = []
 with st.form("cpa_form"):
-    for i in range(32):
+    for i in range(16):
         day = (i // 8) + 1
         metric = i % 8
         if metric == 0:
@@ -134,17 +134,9 @@ with st.form("cpa_form"):
             metric = "CPC (Destination)"
         elif metric == 2:
             metric = "CPM"
-        elif metric == 3:
-            metric = "Impression"
-        elif metric == 4:
-            metric = "Clicks (Destination)"
-        elif metric == 5:
+	else:
             metric = "CTR (Destination)"
-        elif metric == 6:
-            metric = "Conversions"
-        else:
-            metric = "CPA"
-        new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i+32}')
+        new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i+16}')
         new_name_inputs.append(new_name_input)
     if st.form_submit_button("Predict The CPA!"):
         # Get the input values
@@ -167,7 +159,7 @@ with st.form("cpa_form"):
         model = RandomForestRegressor(random_state=42)
 
         # Perform hyperparameter tuning using RandomizedSearchCV
-        random_search = RandomizedSearchCV(estimator=model, param_distributions=param_dist, cv=5, scoring='neg_mean_squared_error', verbose=0, n_iter=20)
+        random_search = RandomizedSearchCV(estimator=model, param_distributions=param_dist, cv=5, scoring='neg_mean_squared_error', verbose=0, n_iter=20, random_state=42)
         random_search.fit(X_train_scaled, y_train_no_nan)
 
         # Extract the best model and fit it to the training data
