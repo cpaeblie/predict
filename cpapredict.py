@@ -3,9 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.impute import SimpleImputer
 from scipy.stats import kurtosis, skew
 from numpy import array
 
@@ -13,7 +12,7 @@ from numpy import array
 zymuno_df = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/main/ad%20final.csv', delimiter=',')
 df_ori = zymuno_df
 df_ori['Date'] = pd.to_datetime(df_ori['Date'])
-df_X = df_ori[['Cost', 'CPC (Destination)', 'CPM', 'CTR (Destination)', 'CPA']]
+df_X = df_ori[['Cost', 'CPC (Destination)', 'CPM', 'Impression', 'Clicks (Destination)', 'CTR (Destination)', 'Conversions', 'CPA']]
 in_seq = df_X.astype(float).values
 
 # Function to split sequences
@@ -58,8 +57,16 @@ X_test = stats_features(X_test)
 # Streamlit application
 st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
 
-# Sidebar menu
-menu = st.sidebar.selectbox("Select Menu", ["Prediction", "History", "Dataset"])
+# Sidebar menu layout
+st.sidebar.title("Menu")
+if st.sidebar.button("Prediction"):
+    menu = "Prediction"
+elif st.sidebar.button("History"):
+    menu = "History"
+elif st.sidebar.button("Dataset"):
+    menu = "Dataset"
+else:
+    menu = "Prediction"  # Default to Prediction if no button is clicked
 
 if menu == "Prediction":
     st.title("CPA Prediction App 🔎")
@@ -90,8 +97,32 @@ if menu == "Prediction":
     """)
 
 elif menu == "History":
-    st.title("History of CPA Data")
-    st.line_chart(df_ori.set_index('Date')[['CPA', 'Cost', 'CPC (Destination)', 'CPM', 'CTR (Destination)']])
+    st.title("History of Marketing Metrics")
+    
+    # Create line charts for each metric
+    st.subheader("Cost")
+    st.line_chart(df_ori.set_index('Date')['Cost'])
+
+    st.subheader("CPC (Destination)")
+    st.line_chart(df_ori.set_index('Date')['CPC (Destination)'])
+
+    st.subheader("CPM")
+    st.line_chart(df_ori.set_index('Date')['CPM'])
+
+    st.subheader("Impression")
+    st.line_chart(df_ori.set_index('Date')['Impression'])
+
+    st.subheader("Clicks (Destination)")
+    st.line_chart(df_ori.set_index('Date')['Clicks (Destination)'])
+
+    st.subheader("CTR (Destination)")
+    st.line_chart(df_ori.set_index('Date')['CTR (Destination)'])
+
+    st.subheader("Conversions")
+    st.line_chart(df_ori.set_index('Date')['Conversions'])
+
+    st.subheader("CPA")
+    st.line_chart(df_ori.set_index('Date')['CPA'])
 
 elif menu == "Dataset":
     st.title("Dataset")
