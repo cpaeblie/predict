@@ -109,13 +109,13 @@ X_test_no_nan = X_test[~np.isnan(X_test).any(axis=1)]
 y_train_no_nan = y_train[~np.isnan(y_train)]
 y_test_no_nan = y_test[~np.isnan(y_test)]
 import streamlit as st
+st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import RandomizedSearchCV
 # Create the title and description
 
-st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
 st.title("CPA Prediction App 🔎")
 import streamlit as st
 from supabase import create_client, Client
