@@ -57,8 +57,8 @@ X_test = stats_features(X_test)
 # Streamlit application
 st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
 
-# Dropdown menu layout
-menu = st.selectbox("Select Page", ["Prediction", "History", "Dataset"])
+# Sidebar navigation
+menu = st.sidebar.selectbox("Select Page", ["Prediction", "History", "Dataset"])
 
 if menu == "Prediction":
     st.title("CPA Prediction App 🔎")
