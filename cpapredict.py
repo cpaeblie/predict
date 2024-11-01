@@ -58,37 +58,9 @@ X_test = stats_features(X_test)
 st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
 
 # Sidebar navigation
-menu = st.sidebar.selectbox("Select Page", ["Prediction", "History", "Dataset"])
+menu = st.sidebar.selectbox("Select Page", ["History", "Dataset", "Prediction"])
 
-if menu == "Prediction":
-    st.title("CPA Prediction App 🔎")
-    st.write("""
-    This application predicts the Cost Per Acquisition (CPA) based on input features.
-    """)
-    
-    new_name_inputs = []
-    with st.form("cpa_form"):
-        for i in range(16):
-            day = (i // 4) + 1
-            metric = ["Cost", "CPC (Destination)", "CPM", "CTR (Destination)"][i % 4]
-            new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i+16}')
-            new_name_inputs.append(new_name_input)
-        if st.form_submit_button("Predict The CPA!"):
-            new_name = np.array([float(new_name_input) for new_name_input in new_name_inputs]).reshape(-1, X_test.shape[1])
-            scaler = StandardScaler().fit(X_train)
-            X_train_scaled = scaler.transform(X_train)
-            X_test_scaled = scaler.transform(new_name)
-            model = RandomForestRegressor(random_state=42)
-            model.fit(X_train_scaled, y_train)
-            y_pred = model.predict(X_test_scaled)
-            st.sidebar.write("Tomorrow's CPA Prediction:")
-            st.sidebar.write(np.round(y_pred, 0))
-
-    st.write("""
-    Please refresh the website if you want to input new values.
-    """)
-
-elif menu == "History":
+if menu == "History":
     st.title("History of Marketing Metrics")
     
     # Create line charts for each metric
@@ -120,4 +92,33 @@ elif menu == "Dataset":
     st.title("Dataset")
     st.write(df_ori)
 
+elif menu == "Prediction":
+    st.title("CPA Prediction App 🔎")
+    st.write("""
+    This application predicts the Cost Per Acquisition (CPA) based on input features.
+    """)
+    
+    new_name_inputs = []
+    with st.form("cpa_form"):
+        for i in range(16):
+            day = (i // 4) + 1
+            metric = ["Cost", "CPC (Destination)", "CPM", "CTR (Destination)"][i % 4]
+            new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i+16}')
+            new_name_inputs.append(new_name_input)
+        if st.form_submit_button("Predict The CPA!"):
+            new_name = np.array([float(new_name_input) for new_name_input in new_name_inputs]).reshape(-1, X_test.shape[1])
+            scaler = StandardScaler().fit(X_train)
+            X_train_scaled = scaler.transform(X_train)
+            X_test_scaled = scaler.transform(new_name)
+            model = RandomForestRegressor(random_state=42)
+            model.fit(X_train_scaled, y_train)
+            y_pred = model.predict(X_test_scaled)
+            st.sidebar.write("Tomorrow's CPA Prediction:")
+            st.sidebar.write(np.round(y_pred, 0))
+
+    st.write("""
+    Please refresh the website if you want to input new values.
+    """)
+
+# Footer
 st.caption('Copyright (c) PT Ebliethos Indonesia 2024')
