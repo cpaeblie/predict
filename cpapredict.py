@@ -1,62 +1,56 @@
-import streamlit as st
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
+from math import sqrt
+import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import RandomizedSearchCV, train_test_split
-from sklearn.impute import SimpleImputer
+import math
+from sklearn.metrics import mean_squared_error
+from numpy import array
+from sklearn.neural_network import MLPRegressor
+from sklearn.neighbors import KNeighborsRegressor
+from scipy.stats import pearsonr
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.svm import SVC
+from sklearn.svm import SVR
+import csv
+from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+from sklearn.metrics import mean_squared_log_error
+from numpy import array
+from scipy.stats import kurtosis, skew
+
+# Additional libraries for Supabase and Streamlit auth
+import streamlit as st
 import dotenv
+from supabase import create_client
 from streamlit_supabase_auth import login_form, logout_button
-from supabase import create_client, Client
-import os
 
-# Load environment variables
+# Load environment variables for Supabase
 dotenv.load_dotenv()
+SUPABASE_URL = st.secrets["SUPABASE_URL"]
+SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
 
-# Set up Supabase client
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+# Supabase client setup
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# Configure Streamlit app
-st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
-st.title("CPA Prediction App 🔎")
-st.write("""
-This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA).
-""")
-
-# User Authentication
+# User login or registration with Supabase Auth
 session = login_form(
     url=SUPABASE_URL,
     apiKey=SUPABASE_KEY,
-    providers=["email", "github", "google"],
+    providers=["email", "github", "google"]
 )
 
-# If the user is not logged in, stop the app
+# Stop app execution if the user is not logged in
 if not session:
     st.stop()
 
-# Display a welcome message and logout button
+# Display a welcome message and a logout button in the sidebar
 with st.sidebar:
-    st.write(f"Welcome, {session['user']['email']}")
+    st.write(f"Welcome, {session['user']['email']}!")
     logout_button()
 
-# Sidebar with additional information
-st.sidebar.title("App Info")
-st.sidebar.info(
-    """
-    CPA Prediction App uses machine learning to predict future CPA.
-    Developed by PT Ebliethos Indonesia, 2024.
-    """
-)
-
-# Load and preprocess the data
-zymuno_df = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/main/ad%20final.csv', delimiter=',')
-df_ori = zymuno_df
-df_ori['Date'] = pd.to_datetime(df_ori['Date'])
-df_X = df_ori[['Cost','CPC (Destination)','CPM','CTR (Destination)','CPA']]
-in_seq = df_X.astype(float).values
-
+# Your existing data loading and ML code
 def split_sequences(sequences, n_steps_in, n_steps_out):
     X, y = list(), list()
     for i in range(len(sequences)):
@@ -67,35 +61,96 @@ def split_sequences(sequences, n_steps_in, n_steps_out):
         seq_x, seq_y = sequences[i:end_ix, :-1], sequences[out_end_ix - 1, -1]
         X.append(seq_x)
         y.append(seq_y)
-    return np.array(X), np.array(y)
+    return array(X), array(y)
+
+def stats_features(input_data):
+    inp = list()
+    for i in range(len(input_data)):
+        inp2 = list()
+        inp2 = input_data[i]
+        min_val = float(np.min(inp2))
+        max_val = float(np.max(inp2))
+        diff = (max_val - min_val)
+        std = float(np.std(inp2))
+        mean = float(np.mean(inp2))
+        median = float(np.median(inp2))
+        kurt = float(kurtosis(inp2))
+        sk = float(skew(inp2))
+        inp2 = np.append(inp2, [min_val, max_val, diff, std, mean, median, kurt, sk])
+        inp = np.append(inp, inp2)
+    inp = inp.reshape(len(input_data), -1)
+    return inp
+
+zymuno_df = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/main/ad%20final.csv', delimiter=',')
+df_ori = zymuno_df
+df_ori['Date'] = pd.to_datetime(df_ori['Date'])
+df_X = df_ori[['Cost','CPC (Destination)','CPM','CTR (Destination)','CPA']]
+in_seq = df_X.astype(float).values
 
 n_steps_in, n_steps_out = 4, 1
 X, y = split_sequences(in_seq, n_steps_in, n_steps_out)
-X = X.reshape((X.shape[0], X.shape[1] * X.shape[2]))
 
-# Split the dataset
+n_input = X.shape[1] * X.shape[2]
+X = X.reshape((X.shape[0], n_input))
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, shuffle=False)
+X_train = stats_features(X_train)
+X_test = stats_features(X_test)
 
-# Define a form for user input
+df_new = df_ori[['Date','CPA']]
+df_new.set_index('Date')
+
+from sklearn.impute import SimpleImputer
+imputer = SimpleImputer(strategy='mean')
+X_train_imputed = imputer.fit_transform(X_train)
+X_test_imputed = imputer.transform(X_test)
+X_train_no_nan = X_train[~np.isnan(X_train).any(axis=1)]
+X_test_no_nan = X_test[~np.isnan(X_test).any(axis=1)]
+y_train_no_nan = y_train[~np.isnan(y_train)]
+y_test_no_nan = y_test[~np.isnan(y_test)]
+
+import streamlit as st
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import RandomizedSearchCV
+
+# Streamlit page setup
+st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
+st.title("CPA Prediction App 🔎")
+st.write("""
+This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features 
+for the 4 days before tomorrow.
+""")
+st.write("""
+Enter the Cost, CPC (Destination), CPM, and CTR (Destination) values for Day 1 through Day 4 below:
+""")
+
+# Input form for CPA predictions
 new_name_inputs = []
 with st.form("cpa_form"):
-    st.write("Enter metrics for Day 1 to Day 4:")
     for i in range(16):
         day = (i // 4) + 1
-        metric = ["Cost", "CPC (Destination)", "CPM", "CTR (Destination)"][i % 4]
-        new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i}')
+        metric = i % 4
+        if metric == 0:
+            metric = "Cost"
+        elif metric == 1:
+            metric = "CPC (Destination)"
+        elif metric == 2:
+            metric = "CPM"
+        else:
+            metric = "CTR (Destination)"
+        
+        new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i+16}')
         new_name_inputs.append(new_name_input)
-
     if st.form_submit_button("Predict The CPA!"):
-        # Convert input values to float and reshape for model input
         new_name = np.array([float(new_name_input) for new_name_input in new_name_inputs]).reshape(-1, X_test.shape[1])
-
-        # Scale the input features
-        scaler = StandardScaler().fit(X_train)
-        X_train_scaled = scaler.transform(X_train)
+        
+        # Scale input features
+        scaler = StandardScaler().fit(X_train_no_nan)
+        X_train_scaled = scaler.transform(X_train_no_nan)
         X_test_scaled = scaler.transform(new_name)
 
-        # Define the hyperparameter distribution
+        # Hyperparameter tuning for Random Forest
         param_dist = {
             'n_estimators': [10, 50, 100, 200, 500],
             'max_depth': [None, 10, 20, 30, 40, 50],
@@ -103,20 +158,23 @@ with st.form("cpa_form"):
             'min_samples_leaf': [1, 2, 4, 8, 16]
         }
 
-        # Initialize the Random Forest Regressor model and perform hyperparameter tuning
         model = RandomForestRegressor(random_state=42)
-        random_search = RandomizedSearchCV(estimator=model, param_distributions=param_dist, cv=5, 
-                                           scoring='neg_mean_squared_error', n_iter=20, random_state=42)
-        random_search.fit(X_train_scaled, y_train)
+        random_search = RandomizedSearchCV(estimator=model, param_distributions=param_dist, cv=5, scoring='neg_mean_squared_error', verbose=0, n_iter=20, random_state=42)
+        random_search.fit(X_train_scaled, y_train_no_nan)
 
-        # Get the best model and make predictions
         best_model = random_search.best_estimator_
+        best_model.fit(X_train_scaled, y_train_no_nan)
+
+        # Prediction
         y_pred = best_model.predict(X_test_scaled)
         y_pred = np.round(y_pred, 0)
 
-        # Display the predictions in the sidebar
+        # Display prediction results
         st.sidebar.write("Tomorrow's CPA Prediction:")
         st.sidebar.write(y_pred)
 
-st.write("Please refresh the website to input new values")
+st.write("""
+Please refresh the page to input new values.
+""")
+
 st.caption('Copyright (c) PT Ebliethos Indonesia 2024')
