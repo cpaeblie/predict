@@ -1,153 +1,142 @@
-import streamlit as st
-import pandas as pd
 import numpy as np
+import pandas as pd
+import streamlit as st
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.impute import SimpleImputer
+from sklearn.model_selection import RandomizedSearchCV
 from scipy.stats import kurtosis, skew
-import matplotlib.pyplot as plt
+import hashlib
 
-# Set up the app
-st.set_page_config(page_title="CPA Prediction App", page_icon="🔎", layout="wide")
+# **User  Authentication Functions**
 
-# Authentication system
-users_db = {"admin": "password"}  # Simple in-memory user "database" for demo
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
 
-# Function for login page
-def login():
-    st.title("Login")
+def check_password(hashed_password, user_password):
+    return hashed_password == hash_password(user_password)
+
+# **User  Registration and Login**
+
+users_db = {}  # This will act as a simple in-memory database
+
+def register_user(username, password):
+    if username in users_db:
+        return False
+    users_db[username] = hash_password(password)
+    return True
+
+def login_user(username, password):
+    if username in users_db and check_password(users_db[username], password):
+        return True
+    return False
+
+# **Streamlit App Setup**
+
+st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
+st.title("CPA Prediction App 🔎")
+
+# **User  Registration/Login Section**
+
+if 'logged_in' not in st.session_state:
+    st.session_state.logged_in = False
+
+if not st.session_state.logged_in:
+    st.subheader("Register")
     username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-    if st.button("Login"):
-        if username in users_db and users_db[username] == password:
-            st.session_state["logged_in"] = True
-            st.session_state["username"] = username
-            st.success(f"Welcome, {username}!")
-            st.experimental_rerun()
-        else:
-            st.error("Invalid username or password")
-
-# Function for registration page
-def register():
-    st.title("Register")
-    username = st.text_input("Choose a Username")
-    password = st.text_input("Choose a Password", type="password")
+    password = st.text_input("Password", type='password')
+    
     if st.button("Register"):
-        if username not in users_db:
-            users_db[username] = password
-            st.success("User registered successfully! You can now log in.")
-            st.experimental_rerun()
+        if register_user(username, password):
+            st.success("Registered successfully! You can now log in.")
         else:
-            st.error("Username already exists")
+            st.error("Username already exists.")
 
-# Load data
-zymuno_df = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/main/ad%20final.csv')
-zymuno_df['Date'] = pd.to_datetime(zymuno_df['Date'])
-df_X = zymuno_df[['Cost', 'CPC (Destination)', 'CPM', 'CTR (Destination)', 'CPA']]
-
-# Splitting sequences (your existing function)
-def split_sequences(sequences, n_steps_in, n_steps_out):
-    X, y = list(), list()
-    for i in range(len(sequences)):
-        end_ix = i + n_steps_in
-        out_end_ix = end_ix + n_steps_out
-        if out_end_ix > len(sequences):
-            break
-        seq_x, seq_y = sequences[i:end_ix, :-1], sequences[out_end_ix - 1, -1]
-        X.append(seq_x)
-        y.append(seq_y)
-    return np.array(X), np.array(y)
-
-# Statistics features (your existing function)
-def stats_features(input_data):
-    inp = []
-    for inp2 in input_data:
-        features = [
-            np.min(inp2), np.max(inp2), np.ptp(inp2),
-            np.std(inp2), np.mean(inp2), np.median(inp2),
-            kurtosis(inp2), skew(inp2)
-        ]
-        inp.append(np.append(inp2, features))
-    return np.array(inp)
-
-# Page layout and content
-if "logged_in" not in st.session_state:
-    st.session_state["logged_in"] = False
-
-if st.session_state["logged_in"]:
-    st.sidebar.title("Navigation")
-    selected_page = st.sidebar.radio("Go to", ["History", "Dataset", "Prediksi"])
-
-    # User info & logout
-    st.sidebar.markdown("---")
-    st.sidebar.write(f"Welcome, **{st.session_state['username']}**")
-    if st.sidebar.button("Logout"):
-        st.session_state["logged_in"] = False
-        st.experimental_rerun()
-
-    # Page content
-    if selected_page == "History":
-        st.title("History")
-        st.write("Line chart of each column in the dataset")
-        
-        for column in df_X.columns:
-            st.write(f"Line chart for **{column}**")
-            fig, ax = plt.subplots()
-            ax.plot(zymuno_df["Date"], df_X[column])
-            ax.set_xlabel("Date")
-            ax.set_ylabel(column)
-            st.pyplot(fig)
-
-    elif selected_page == "Dataset":
-        st.title("Dataset")
-        st.write("Displaying the dataset in a table format")
-        st.dataframe(zymuno_df)
-
-    elif selected_page == "Prediksi":
-        st.title("Prediksi")
-        st.write("Enter the values for 4 days to predict CPA")
-
-        n_steps_in, n_steps_out = 4, 1
-        X, y = split_sequences(df_X.values, n_steps_in, n_steps_out)
-        n_input = X.shape[1] * X.shape[2]
-        X = X.reshape((X.shape[0], n_input))
-        
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-        X_train = stats_features(X_train)
-        X_test = stats_features(X_test)
-
-        new_inputs = []
-        for day in range(1, 5):
-            st.write(f"Day {day}")
-            for feature in ["Cost", "CPC (Destination)", "CPM", "CTR (Destination)"]:
-                val = st.number_input(f"{feature} on Day {day}", min_value=0.0)
-                new_inputs.append(val)
-
-        if st.button("Predict The CPA!"):
-            new_input = np.array(new_inputs).reshape(1, -1)
-            scaler = StandardScaler().fit(X_train)
-            X_train_scaled = scaler.transform(X_train)
-            new_input_scaled = scaler.transform(new_input)
-
-            param_dist = {
-                'n_estimators': [10, 50, 100, 200],
-                'max_depth': [None, 10, 20],
-                'min_samples_split': [2, 5, 10]
-            }
-
-            model = RandomForestRegressor(random_state=42)
-            random_search = RandomizedSearchCV(
-                model, param_dist, cv=5, n_iter=5, random_state=42, scoring='neg_mean_squared_error'
-            )
-            random_search.fit(X_train_scaled, y_train)
-            best_model = random_search.best_estimator_
-
-            y_pred = best_model.predict(new_input_scaled)
-            st.write(f"Predicted CPA for tomorrow: {round(y_pred[0], 2)}")
+    st.subheader("Login")
+    login_username = st.text_input("Username", key="login_username")
+    login_password = st.text_input("Password", type='password', key="login_password")
+    
+    if st.button("Login"):
+        if login_user(login_username, login_password):
+            st.session_state.logged_in = True
+            st.success("Logged in successfully!")
+        else:
+            st.error("Invalid username or password.")
 
 else:
-    page_choice = st.selectbox("Choose an option", ["Login", "Register"])
-    if page_choice == "Login":
-        login()
-    elif page_choice == "Register":
-        register()
+    # **CPA Prediction Logic**
+
+    st.write("""
+    This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features (Cost, CPC (Destination), CPM, CTR (Destination), CPA) for the 4 days before tomorrow.
+    """)
+
+    # **Input Features**
+    new_name_inputs = []
+    with st.form("cpa_form"):
+        for i in range(16):
+            day = (i // 4) + 1
+            metric = ["Cost", "CPC (Destination)", "CPM", "CTR (Destination)"][i % 4]
+            new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i+16}')
+            new_name_inputs.append(new_name_input)
+        if st.form_submit_button("Predict The CPA!"):
+            # Load data and prepare for prediction
+            zymuno_df = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/main/ad%20final.csv', delimiter=',')
+            df_ori = zymuno_df
+            df_ori['Date'] = pd.to_datetime(df_ori['Date'])
+            df_X = df_ori[['Cost','CPC (Destination)','CPM','CTR (Destination)','CPA']]
+            in_seq = df_X.astype(float).values
+            
+            n_steps_in, n_steps_out = 4, 1
+            X, y = split_sequences(in_seq, n_steps_in, n_steps_out)
+
+            n_input = X.shape[1] * X.shape[2]
+            X = X.reshape((X.shape[0], n_input))
+
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, shuffle=False)
+            X_train = stats_features(X_train)
+            X_test = stats_features(X_test)
+
+            imputer = SimpleImputer(strategy='mean')
+            X_train_imputed = imputer.fit_transform(X_train)
+            X_test_imputed = imputer.transform(X_test)
+
+            # Scale the input features
+            scaler = StandardScaler().fit(X_train_imputed)
+            new_input = np.array([float(input_value) for input_value in new_name_inputs]).reshape(1, -1)
+            new_input_scaled = scaler.transform(new_input)
+
+            # Train model
+            param_dist = {
+                'n_estimators': [10, 50, 100, 200, 500],
+                'max_depth': [None, 10, 20, 30, 40, 50],
+                'min_samples_split': [2, 5, 10, 20, 30],
+                'min_samples_leaf': [1, 2, 4, 8, 16]
+            }
+
+            # Initialize the Random Forest Regressor model
+            model = RandomForestRegressor(random_state=42)
+
+            # Perform hyperparameter tuning using RandomizedSearchCV
+            random_search = RandomizedSearchCV(estimator=model, param_distributions=param_dist, cv=5,
+                                               scoring='neg_mean_squared_error', verbose=0, n_iter=20, random_state=42)
+            random_search.fit(X_train_imputed, y_train)
+
+            # Extract the best model and fit it to the training data
+            best_model = random_search.best_estimator_
+            best_model.fit(X_train_imputed, y_train)
+
+            # Make predictions on the new input data
+            y_pred = best_model.predict(new_input_scaled)
+            y_pred = np.round(y_pred, 0)
+
+            # Display the predictions in the sidebar
+            st.sidebar.write("Tomorrow's CPA Prediction:")
+            st.sidebar.write(y_pred[0])
+
+    st.write("""
+    Please refresh the website if you want to input new values
+    """)
+
+# **Footer Section**
+st.caption('Copyright (c) PT Ebliethos Indonesia 2024')
