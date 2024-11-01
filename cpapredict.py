@@ -60,9 +60,47 @@ X_test = stats_features(X_test)
 # Initialize Streamlit app
 st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
 st.sidebar.title("Menu")
-menu = st.sidebar.selectbox("Select a page:", ["Prediction", "Dataset", "History"])
+menu = st.sidebar.selectbox("Select a page:", ["History", "Dataset", "Prediction"])
 
-if menu == "Prediction":
+if menu == "History":
+    
+    # History Page
+    st.title("History")
+    st.write("This section displays line charts of each column in the dataset, providing insights into trends over time.")
+
+    # Date vs CPA
+    st.subheader("CPA Over Time")
+    st.write("This chart shows the trend of Cost Per Acquisition (CPA) over the recorded dates. Analyzing CPA helps in understanding the effectiveness of marketing efforts.")
+    st.line_chart(df_ori.set_index('Date')['CPA'], use_container_width=True)
+    
+    # Date vs Cost
+    st.subheader("Cost Over Time")
+    st.write("This chart illustrates the total Cost incurred over time. Monitoring cost trends is crucial for budget management.")
+    st.line_chart(df_ori.set_index('Date')['Cost'], use_container_width=True)
+    
+    # Date vs CPC (Destination)
+    st.subheader("CPC (Destination) Over Time")
+    st.write("This chart depicts the Cost Per Click (CPC) for destination traffic over time. A lower CPC indicates more efficient ad spending.")
+    st.line_chart(df_ori.set_index('Date')['CPC (Destination)'], use_container_width=True)
+
+    # Date vs CPM
+    st.subheader("CPM Over Time")
+    st.write("This chart displays the Cost Per Mille (CPM), which represents the cost of acquiring 1,000 impressions. It's important for evaluating ad performance.")
+    st.line_chart(df_ori.set_index('Date')['CPM'], use_container_width=True)
+
+    # Date vs CTR (Destination)
+    st.subheader("CTR (Destination) Over Time")
+    st.write("This chart shows the Click-Through Rate (CTR) for destination traffic over time. A higher CTR suggests better ad engagement.")
+    st.line_chart(df_ori.set_index('Date')['CTR (Destination)'], use_container_width=True)
+
+elif menu == "Dataset":
+    
+    # Dataset Page
+    st.title("Dataset")
+    st.write("Here is the dataset used for the CPA prediction.")
+    st.dataframe(df_ori)
+
+elif menu == "Prediction":
     
     # Prediction Page
     st.title("CPA Prediction App 🔎")
@@ -109,41 +147,5 @@ if menu == "Prediction":
             st.write(y_pred)
 
     st.write("Please refresh the website if you want to input new values.")
-
-
-
-
-elif menu == "Dataset":
-    
-    # Dataset Page
-    st.title("Dataset")
-    st.write("Here is the dataset used for the CPA prediction.")
-    st.dataframe(df_ori)
-
-
-elif menu == "History":
-    
-    # History Page
-    st.title("History")
-    st.write("This section will display the line charts of each column in the dataset.")
-    
-    # Plotting the line charts for each column
-    st.subheader("Line Charts")
-    
-    # Date vs CPA
-    st.line_chart(df_ori.set_index('Date')['CPA'], use_container_width=True)
-    
-    # Date vs Cost
-    st.line_chart(df_ori.set_index('Date')['Cost'], use_container_width=True)
-    
-    # Date vs CPC (Destination)
-    st.line_chart(df_ori.set_index('Date')['CPC (Destination)'], use_container_width=True)
-
-    # Date vs CPM
-    st.line_chart(df_ori.set_index('Date')['CPM'], use_container_width=True)
-
-    # Date vs CTR (Destination)
-    st.line_chart(df_ori.set_index('Date')['CTR (Destination)'], use_container_width=True)
-
 
 st.caption('Copyright (c) PT Ebliethos Indonesia 2024')
