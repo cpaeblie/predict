@@ -109,63 +109,13 @@ X_test_no_nan = X_test[~np.isnan(X_test).any(axis=1)]
 y_train_no_nan = y_train[~np.isnan(y_train)]
 y_test_no_nan = y_test[~np.isnan(y_test)]
 import streamlit as st
-st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import RandomizedSearchCV
 # Create the title and description
-
-st.title("CPA Prediction App 🔎")
-import streamlit as st
-from supabase import create_client, Client
-import os
-import numpy as np
-from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import RandomizedSearchCV
-
-# Initialize Supabase
-SUPABASE_URL = "https://rsbevaaolzntbypvegcz.supabase.co"  # Replace with your Supabase API URL
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzYmV2YWFvbHpudGJ5cHZlZ2N6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0MzUxODEsImV4cCI6MjA0NjAxMTE4MX0.wSsAMedFR5nJkSIbeYL3g_lFx_99Z9GtX383VC5wGus"  # Replace with your Supabase ANON Key
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-
-# Streamlit Page Configuration
 st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
 st.title("CPA Prediction App 🔎")
-
-# Information Box
-st.info("Thank you for your ongoing support. We have updated our login functionality. Sign up once with a preferred login method or continue with your previous account credentials.")
-
-# Authentication Options
-auth_method = st.selectbox("Sign in with", ["Email", "GitHub", "Google"])
-
-# Handle Authentication
-if auth_method == "Email":
-    email = st.text_input("Email")
-    password = st.text_input("Password", type="password")
-    if st.button("Sign in"):
-        response = supabase.auth.sign_in_with_password(email=email, password=password)
-        if response.error:
-            st.error("Failed to sign in. Check your credentials.")
-        else:
-            st.success("Signed in successfully!")
-
-elif auth_method == "GitHub":
-    if st.button("Sign in with GitHub"):
-        response = supabase.auth.sign_in_with_provider(provider="github")
-        if response.error:
-            st.error("GitHub login failed.")
-        else:
-            st.success("Signed in with GitHub!")
-
-elif auth_method == "Google":
-    if st.button("Sign in with Google"):
-        response = supabase.auth.sign_in_with_provider(provider="google")
-        if response.error:
-            st.error("Google login failed.")
-        else:
-            st.success("Signed in with Google!")
 st.write("""
 This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features (Cost, CPC (Destination), CPM, Impression, Clicks (Destination), CTR (Destination), Conversions, CPA) for the 4 days before tomorrow.
 """)
