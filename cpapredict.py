@@ -126,8 +126,8 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import RandomizedSearchCV
 
 # Initialize Supabase
-SUPABASE_URL = "your_supabase_url"  # Replace with your Supabase API URL
-SUPABASE_KEY = "your_supabase_anon_key"  # Replace with your Supabase ANON Key
+SUPABASE_URL = "https://rsbevaaolzntbypvegcz.supabase.co"  # Replace with your Supabase API URL
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzYmV2YWFvbHpudGJ5cHZlZ2N6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0MzUxODEsImV4cCI6MjA0NjAxMTE4MX0.wSsAMedFR5nJkSIbeYL3g_lFx_99Z9GtX383VC5wGus"  # Replace with your Supabase ANON Key
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Streamlit Page Configuration
