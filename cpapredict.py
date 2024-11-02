@@ -223,6 +223,44 @@ elif menu == "Dataset":
     st.title("Dataset")
     st.write("Here is the dataset used for the CPA prediction.")
     st.dataframe(df_ori)
+# Correlation Analysis
+st.subheader("Feature Correlations")
+st.write("The following scatter plots illustrate the correlations between key features in the dataset.")
+
+# Ensure df_ori is defined and contains the necessary columns
+if 'Cost' in df_ori.columns and 'CPC (Destination)' in df_ori.columns and 'CPM' in df_ori.columns and 'CTR (Destination)' in df_ori.columns and 'CPA' in df_ori.columns:
+    features = ['Cost', 'CPC (Destination)', 'CPM', 'CTR (Destination)', 'CPA']
+    
+    # Drop rows with NaN values in the relevant features
+    df_ori = df_ori.dropna(subset=features)
+
+    # Create scatter plots for each pair of features
+    for i in range(len(features)):
+        for j in range(i + 1, len(features)):
+            feature1 = features[i]
+            feature2 = features[j]
+
+            # Scatter plot
+            plt.figure(figsize=(10, 6))
+            try:
+                sns.scatterplot(data=df_ori, x=feature1, y=feature2)
+                plt.title(f'Scatter Plot: {feature1} vs {feature2}')
+                plt.xlabel(feature1)
+                plt.ylabel(feature2)
+                plt.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
+                plt.axvline(x=0, color='gray', linestyle='--', linewidth=0.5)
+                plt.grid()
+
+                # Show the plot in Streamlit
+                st.pyplot(plt)
+
+                # Calculate correlation
+                correlation_value = df_ori[feature1].corr(df_ori[feature2])
+                st.write(f"The correlation coefficient between **{feature1}** and **{feature2}** is **{correlation_value:.2f}**.")
+            except Exception as e:
+                st.error(f"Error occurred while plotting {feature1} vs {feature2}: {e}")
+else:
+    st.error("One or more required columns are missing from the DataFrame.")
 
 elif menu == "Prediction":
 
