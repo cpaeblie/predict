@@ -12,3 +12,4 @@ setuptools>=42
 wheel
 supabase>=2.0.0
 toml==0.10.2
+st-pages==0.4.3
