@@ -151,22 +151,6 @@ if menu == "History":
     st.write("This chart shows the Click-Through Rate (CTR) for destination traffic over time. A higher CTR suggests better ad engagement.")
     st.line_chart(df_ori.set_index('Date')['CTR (Destination)'], use_container_width=True)
 
-    # Date vs Impression
-    st.subheader("Impressions Over Time")
-    st.write("This chart shows the total number of impressions over time. Impressions indicate how often ads are shown to users, and tracking this metric helps in understanding the reach of marketing campaigns.")
-    st.line_chart(df_ori.set_index('Date')['Impression'], use_container_width=True)
-
-    # Date vs Clicks (Destination)
-    st.subheader("Clicks (Destination) Over Time")
-    st.write("This chart illustrates the total number of clicks for destination traffic over time. Monitoring clicks is essential for assessing user engagement and the effectiveness of ad campaigns.")
-    st.line_chart(df_ori.set_index('Date')['Clicks (Destination)'], use_container_width=True)
-
-    # Date vs Conversions
-    st.subheader("Conversions Over Time")
-    st.write("This chart shows the total number of conversions over time. Conversions reflect the success of marketing efforts in driving desired actions, such as purchases or sign-ups, making it a key performance indicator.")
-    st.line_chart(df_ori.set_index('Date')['Conversions'], use_container_width=True)
-    # End of the History Page
-
 elif menu == "Dataset":
     
     # Dataset Page
