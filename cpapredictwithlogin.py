@@ -1,4 +1,5 @@
 import numpy as np
+import seaborn as sns
 import pandas as pd
 from math import sqrt
 import matplotlib.pyplot as plt
@@ -116,12 +117,12 @@ from sklearn.model_selection import RandomizedSearchCV
 # Create the title and description
 st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
 st.title("CPA Prediction App 🔎")
-st.write("""
-This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features (Cost, CPC (Destination), CPM, Impression, Clicks (Destination), CTR (Destination), Conversions, CPA) for the 4 days before tomorrow.
+st.write("""This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features Cost, CPC (Destination), CPM, CTR (Destination) for the 4 days before tomorrow.
 """)
 st.write("""
-Enter the Cost, CPC (Destination), CPM, Impression, Clicks (Destination), CTR (Destination), Conversions, and CPA at Day 1 until Day 4 (Don't forget to recheck again before click the button!):
+Enter the Cost, CPC (Destination), CPM, CTR (Destination) at Day 1 until Day 4:
 """)
+
 # Create the input widgets for the new name
 new_name_inputs = []
 with st.form("cpa_form"):
@@ -137,13 +138,13 @@ with st.form("cpa_form"):
         else:
             metric = "CTR (Destination)"
         
-        new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i+16}')
+        new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i + 16}')
         new_name_inputs.append(new_name_input)
+    
     if st.form_submit_button("Predict The CPA!"):
         # Get the input values
         new_name = np.array([float(new_name_input) for new_name_input in new_name_inputs]).reshape(-1, X_test.shape[1])
-        # Remaining code...
-
+        
         # Scale the input features
         scaler = StandardScaler().fit(X_train_no_nan)
         X_train_scaled = scaler.transform(X_train_no_nan)
@@ -177,7 +178,10 @@ with st.form("cpa_form"):
         st.sidebar.write(y_pred)
 
 st.write("""
-Please refresh the website if you want input new values
+Don't forget to recheck again before clicking the button
+""")
+st.write("""
+Please refresh the website if you want to input new values
 """)
 
 	    
