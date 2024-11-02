@@ -1,0 +1,14 @@
+[[pages]]
+path = "cpapredict_ubah_value.py"
+name = "SmartExam Creator"
+icon = "📝"
+
+[[pages]]
+path = "pages/dataset.py"
+name = "Chat with PDF"
+icon = "📄"
+
+[[pages]]
+path = "pages/history.py"
+name = "Chat with Images"
+icon = "🖼️"
