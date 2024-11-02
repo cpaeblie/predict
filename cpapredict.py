@@ -172,14 +172,11 @@ elif menu == "Dataset":
     st.title("Dataset")
     st.write("Here is the dataset used for the CPA prediction.")
     st.dataframe(df_ori)
-	# Correlation Analysis
-    st.subheader("Feature Correlations")
-    st.write("The following scatter plots illustrate the correlations between key features in the dataset.")
+    st.write("This section displays scatter plots illustrating the correlations between key features in the dataset.")
 
     # Create scatter plots for correlated features
     features = ['Cost', 'CPC (Destination)', 'CPM', 'CTR (Destination)', 'CPA']
     
-    # Create scatter plots for each pair of features
     for i in range(len(features)):
         for j in range(i + 1, len(features)):
             feature1 = features[i]
@@ -222,8 +219,30 @@ elif menu == "Dataset":
             elif feature1 == 'CPA' and feature2 == 'CTR (Destination)':
                 st.write("This scatter plot illustrates the relationship between CPA and CTR. A negative correlation may suggest that as the click-through rate increases, the cost per acquisition decreases, indicating more effective spending.")
 
-
 elif menu == "Prediction":
+    
+    st.write("""This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features (Cost, CPC (Destination), CPM, Impression, Clicks (Destination), CTR (Destination), Conversions, CPA) for the 4 days before tomorrow.
+""")
+    st.write("""
+Enter the Cost, CPC (Destination), CPM, Impression, Clicks (Destination), CTR (Destination), Conversions, and CPA at Day 1 until Day 4 (Don't forget to recheck again before clicking the button!):
+""")
+    # Create the input widgets for the new name
+    new_name_inputs = []
+    with st.form("cpa_form"):
+        for i in range(16):
+            day = (i // 4) + 1
+            metric = i % 4
+            if metric == 0:
+                metric = "Cost"
+            elif metric == 1:
+                metric = "CPC (Destination)"
+            elif metric == 2:
+                metric = "CPM"
+            else:
+                metric = "CTR (Destination)"
+        
+            new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i+16}')
+            new_name_inputs.appendelif menu == "Prediction":
 
     st.write("""This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features (Cost, CPC (Destination), CPM, Impression, Clicks (Destination), CTR (Destination), Conversions, CPA) for the 4 days before tomorrow.
 """)
