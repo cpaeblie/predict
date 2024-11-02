@@ -153,7 +153,7 @@ if menu == "History":
     # Date vs Impression
     st.subheader("Impressions Over Time")
     st.write("This chart shows the total number of impressions over time. Impressions indicate how often ads are shown to users, and tracking this metric helps in understanding the reach of marketing campaigns.")
-    st.line_chart(df_ori.set_index('Date')['Impressions'], use_container_width=True)
+    st.line_chart(df_ori.set_index('Date')['Impression'], use_container_width=True)
 
     # Date vs Clicks (Destination)
     st.subheader("Clicks (Destination) Over Time")
