@@ -12,4 +12,4 @@ setuptools>=42
 wheel
 supabase
 streamlit-supabase-auth
-supabase-py
+supabase==0.0.5
