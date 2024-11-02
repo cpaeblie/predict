@@ -20,12 +20,6 @@ from sklearn import metrics
 from sklearn.metrics import mean_squared_log_error
 from numpy import array
 from scipy.stats import kurtosis, skew
-st.set_page_config(
-    page_title="Dataset",
-    page_icon="📝",
-    layout="centered",
-    initial_sidebar_state="expanded",
-)
 def split_sequences(sequences, n_steps_in, n_steps_out):
 	X, y = list(), list()
 	for i in range(len(sequences)):
