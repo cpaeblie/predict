@@ -115,7 +115,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import RandomizedSearchCV
 # Create the title and description
-st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
+st.set_page_config(page_title="CPA Prediction App", page_icon="🔎", layout="wide", initial_sidebar_state="expanded")
 st.title("CPA Prediction App 🔎")
 st.write("""This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features Cost, CPC (Destination), CPM, CTR (Destination) for the 4 days before tomorrow.
 """)
