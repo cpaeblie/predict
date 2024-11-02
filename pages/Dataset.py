@@ -115,7 +115,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import RandomizedSearchCV
 # Create the title and description
-st.set_page_config(page_title="Dataset", page_icon="📑", layout="centered", initial_sidebar_state="expanded",)
+st.set_page_config(page_title="Dataset", page_icon="📑", layout="wide", initial_sidebar_state="expanded",)
 # Dataset Page
 st.title("Dataset 📑")
 st.write("Here is the dataset used for the CPA prediction.")
