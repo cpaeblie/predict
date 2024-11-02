@@ -153,7 +153,7 @@ if menu == "History":
     # Date vs Impression
     st.subheader("Impressions Over Time")
     st.write("This chart shows the total number of impressions over time. Impressions indicate how often ads are shown to users, and tracking this metric helps in understanding the reach of marketing campaigns.")
-    st.line_chart(df_ori.set_index('Date')['Impression'], use_container_width=True)
+    st.line_chart(df_ori.set_index('Date')['Impressions'], use_container_width=True)
 
     # Date vs Clicks (Destination)
     st.subheader("Clicks (Destination) Over Time")
@@ -164,6 +164,58 @@ if menu == "History":
     st.subheader("Conversions Over Time")
     st.write("This chart shows the total number of conversions over time. Conversions reflect the success of marketing efforts in driving desired actions, such as purchases or sign-ups, making it a key performance indicator.")
     st.line_chart(df_ori.set_index('Date')['Conversions'], use_container_width=True)
+
+    # Correlation Analysis
+    st.subheader("Feature Correlations")
+    st.write("The following scatter plots illustrate the correlations between key features in the dataset.")
+
+    # Create scatter plots for correlated features
+    features = ['Cost', 'CPC (Destination)', 'CPM', 'CTR (Destination)', 'CPA']
+    
+    # Create scatter plots for each pair of features
+    for i in range(len(features)):
+        for j in range(i + 1, len(features)):
+            feature1 = features[i]
+            feature2 = features[j]
+
+            # Scatter plot
+            plt.figure(figsize=(10, 6))
+            sns.scatterplot(data=df_ori, x=feature1, y=feature2)
+            plt.title(f'Scatter Plot: {feature1} vs {feature2}')
+            plt.xlabel(feature1)
+            plt.ylabel(feature2)
+            plt.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
+            plt.axvline(x=0, color='gray', linestyle='--', linewidth=0.5)
+            plt.grid()
+
+            # Show the plot in Streamlit
+            st.pyplot(plt)
+
+            # Calculate correlation
+            correlation_value = df_ori[feature1].corr(df_ori[feature2])
+            st.write(f"The correlation coefficient between **{feature1}** and **{feature2}** is **{correlation_value:.2f}**. This indicates a {'positive' if correlation_value > 0 else 'negative'} correlation. A higher value suggests that as one feature increases, the other tends to also increase (or decrease, in the case of negative correlation).")
+
+            # Additional descriptions for specific pairs
+            if feature1 == 'Cost' and feature2 == 'CPC (Destination)':
+                st.write("This scatter plot shows the relationship between total Cost and Cost Per Click (CPC). Typically, as the total cost increases, the CPC may also increase, indicating that higher spending is associated with higher costs per click.")
+            elif feature1 == 'Cost' and feature2 == 'CPM':
+                st.write("This scatter plot illustrates the relationship between total Cost and Cost Per Mille (CPM). A positive correlation here suggests that as the total cost rises, the cost per 1,000 impressions also tends to rise.")
+            elif feature1 == 'CPC (Destination)' and feature2 == 'CPM':
+                st.write("This scatter plot displays the relationship between CPC and CPM. A positive correlation may indicate that higher costs per click are associated with higher costs per 1,000 impressions.")
+            elif feature1 == 'CPC (Destination)' and feature2 == 'CTR (Destination)':
+                st.write("This scatter plot shows the relationship between CPC and Click-Through Rate (CTR) for destination traffic. A negative correlation might suggest that as the cost per click increases, the engagement (CTR) may decrease.")
+            elif feature1 == 'CPM' and feature2 == 'CTR (Destination)':
+                st.write("This scatter plot illustrates the relationship between CPM and CTR. A negative correlation could indicate that higher costs per 1,000 impressions are associated with lower engagement rates.")
+            elif feature1 == 'CPA' and feature2 == 'Cost':
+                st.write("This scatter plot shows the relationship between Cost and Cost Per Acquisition (CPA). A positive correlation suggests that as total spending increases, the cost to acquire each customer may also increase.")
+            elif feature1 == 'CPA' and feature2 == 'CPC (Destination)':
+                st.write("This scatter plot illustrates the relationship between CPA and CPC. A positive correlation may imply that higher costs per click lead to higher costs per acquisition.")
+            elif feature1 == 'CPA' and feature2 == 'CPM':
+                st.write("This scatter plot shows the relationship between CPA and CPM. A positive correlation might suggest that as the cost per 1,000 impressions increases, the cost per acquisition also tends to increase.")
+            elif feature1 == 'CPA' and feature2 == 'CTR (Destination)':
+                st.write("This scatter plot illustrates the relationship between CPA and CTR. A negative correlation may suggest that as the click-through rate increases, the cost per acquisition decreases, indicating more effective spending.")
+
+    # End of the History Page
 
 elif menu == "Dataset":
     
