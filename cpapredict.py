@@ -198,10 +198,10 @@ elif menu == "Dataset":
 
 elif menu == "Prediction":
 
-    st.write("""This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features (Cost, CPC (Destination), CPM, Impression, Clicks (Destination), CTR (Destination), Conversions, CPA) for the 4 days before tomorrow.
+    st.write("""This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features Cost, CPC (Destination), CPM, CTR (Destination) for the 4 days before tomorrow.
 """)
     st.write("""
-Enter the Cost, CPC (Destination), CPM, Impression, Clicks (Destination), CTR (Destination), Conversions, and CPA at Day 1 until Day 4 (Don't forget to recheck again before click the button!):
+Enter the Cost, CPC (Destination), CPM, CTR (Destination) at Day 1 until Day 4:
 """)
 # Create the input widgets for the new name
     new_name_inputs = []
@@ -256,7 +256,9 @@ Enter the Cost, CPC (Destination), CPM, Impression, Clicks (Destination), CTR (D
         # Display the predictions in the sidebar
             st.sidebar.write("Tomorrow's CPA Prediction:")
             st.sidebar.write(y_pred)
-
+    st.write("""
+    Don't forget to recheck again before click the button
+""")
     st.write("""
     Please refresh the website if you want input new values
 """)
