@@ -117,8 +117,6 @@ from sklearn.model_selection import RandomizedSearchCV
 # Create the title and description
 st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
 st.title("CPA Prediction App 🔎")
-st.sidebar.title("Menu")
-menu = st.sidebar.selectbox("Select a page:", ["History", "Dataset", "Prediction"])
 # Dataset Page
 st.title("Dataset")
 st.write("Here is the dataset used for the CPA prediction.")
