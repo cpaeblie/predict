@@ -4,3 +4,8 @@ backgroundColor = "#0e1117"
 secondaryBackgroundColor = "#262730"
 textColor = "#ffffff"
 font = "sans serif"
+
+[[pages]]
+path = "cpapredict.py"
+name = "SmartExam Creator"
+icon = "📝"
