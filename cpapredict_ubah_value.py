@@ -1,4 +1,5 @@
 import numpy as np
+import seaborn as sns
 import pandas as pd
 from math import sqrt
 import matplotlib.pyplot as plt
@@ -63,7 +64,7 @@ import pandas as pd
 zymuno_df = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/main/ad%20final.csv', delimiter=',')
 df_ori = zymuno_df
 df_ori['Date'] = pd.to_datetime(df_ori['Date'])
-df_X = df_ori[['Cost','CPC (Destination)','CPM','Impression','Clicks (Destination)','CTR (Destination)','Conversions','CPA','CPA']]
+df_X = df_ori[['Cost','CPC (Destination)','CPM','CTR (Destination)','CPA']]
 in_seq = df_X.astype(float).values
 #out_seq = df_y.astype(float).values
 
@@ -74,7 +75,7 @@ in_seq = df_X.astype(float).values
 #dataset = hstack((in_seq1, out_seq))
 
 
-n_steps_in, n_steps_out = 3, 1
+n_steps_in, n_steps_out = 4, 1
 X, y = split_sequences(in_seq, n_steps_in, n_steps_out)
 
 n_input = X.shape[1] * X.shape[2]
@@ -116,40 +117,34 @@ from sklearn.model_selection import RandomizedSearchCV
 # Create the title and description
 st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
 st.title("CPA Prediction App 🔎")
-st.write("""
-This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features (Cost, CPC (Destination), CPM, Impression, Clicks (Destination), CTR (Destination), Conversions, CPA) for the n days before tomorrow.
+st.write("""This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features Cost, CPC (Destination), CPM, CTR (Destination) for the 4 days before tomorrow.
 """)
 st.write("""
-Enter the Cost, CPC (Destination), CPM, Impression, Clicks (Destination), CTR (Destination), Conversions, and CPA at Day 1 until Day n (Don't forget to recheck again before click the button!):
+Enter the Cost, CPC (Destination), CPM, CTR (Destination) at Day 1 until Day 4:
 """)
+
 # Create the input widgets for the new name
 new_name_inputs = []
 with st.form("cpa_form"):
-    for i in range(24):
-        day = (i // 8) + 1
-        metric = i % 8
+    for i in range(16):
+        day = (i // 4) + 1
+        metric = i % 4
         if metric == 0:
             metric = "Cost"
         elif metric == 1:
             metric = "CPC (Destination)"
         elif metric == 2:
             metric = "CPM"
-        elif metric == 3:
-            metric = "Impression"
-        elif metric == 4:
-            metric = "Clicks (Destination)"
-        elif metric == 5:
-            metric = "CTR (Destination)"
-        elif metric == 6:
-            metric = "Conversions"
         else:
-            metric = "CPA"
-        new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i+24}')
+            metric = "CTR (Destination)"
+        
+        new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i + 16}')
         new_name_inputs.append(new_name_input)
+    
     if st.form_submit_button("Predict The CPA!"):
         # Get the input values
         new_name = np.array([float(new_name_input) for new_name_input in new_name_inputs]).reshape(-1, X_test.shape[1])
-
+        
         # Scale the input features
         scaler = StandardScaler().fit(X_train_no_nan)
         X_train_scaled = scaler.transform(X_train_no_nan)
@@ -167,7 +162,7 @@ with st.form("cpa_form"):
         model = RandomForestRegressor(random_state=42)
 
         # Perform hyperparameter tuning using RandomizedSearchCV
-        random_search = RandomizedSearchCV(estimator=model, param_distributions=param_dist, cv=5, scoring='neg_mean_squared_error', verbose=0, n_iter=20)
+        random_search = RandomizedSearchCV(estimator=model, param_distributions=param_dist, cv=5, scoring='neg_mean_squared_error', verbose=0, n_iter=20, random_state=42)
         random_search.fit(X_train_scaled, y_train_no_nan)
 
         # Extract the best model and fit it to the training data
@@ -183,7 +178,10 @@ with st.form("cpa_form"):
         st.sidebar.write(y_pred)
 
 st.write("""
-Please refresh the website if you want input new values
+Don't forget to recheck again before clicking the button
+""")
+st.write("""
+Please refresh the website if you want to input new values
 """)
 
 	    
