@@ -11,3 +11,4 @@ Pillow==9.5.0
 setuptools>=42
 wheel
 supabase>=2.0.0
+toml==0.10.2
