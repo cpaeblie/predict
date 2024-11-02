@@ -1,25 +1,4 @@
-[[pages]]
+[pages]
 path = "cpapredict.py"
 name = "SmartExam Creator"
 icon = "📝"
-
-[[pages]]
-path = "pages/📄 Chat_with_PDF.py"
-name = "Chat with PDF"
-icon = "📄"
-
-[[pages]]
-path = "pages/🖼️ Chat_with_Images.py"
-name = "Chat with Images"
-icon = "🖼️"
-
-[[pages]]
-path = "pages/1_0_Summaries_no_graphs_Count.py"
-name = "Summarize"
-icon = "🧠"
-
-
-[[pages]]
-path = "pages/💵 Pricing.py"
-name = "Pricing"
-icon = "💵"
