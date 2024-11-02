@@ -116,68 +116,110 @@ from sklearn.model_selection import RandomizedSearchCV
 # Create the title and description
 st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
 st.title("CPA Prediction App 🔎")
-st.write("""
-This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features (Cost, CPC (Destination), CPM, Impression, Clicks (Destination), CTR (Destination), Conversions, CPA) for the 4 days before tomorrow.
+st.sidebar.title("Menu")
+menu = st.sidebar.selectbox("Select a page:", ["History", "Dataset", "Prediction"])
+
+if menu == "History":
+    
+    # History Page
+    st.title("History")
+    st.write("This section displays line charts of each column in the dataset, providing insights into trends over time.")
+
+    # Date vs CPA
+    st.subheader("CPA Over Time")
+    st.write("This chart shows the trend of Cost Per Acquisition (CPA) over the recorded dates. Analyzing CPA helps in understanding the effectiveness of marketing efforts.")
+    st.line_chart(df_ori.set_index('Date')['CPA'], use_container_width=True)
+    
+    # Date vs Cost
+    st.subheader("Cost Over Time")
+    st.write("This chart illustrates the total Cost incurred over time. Monitoring cost trends is crucial for budget management.")
+    st.line_chart(df_ori.set_index('Date')['Cost'], use_container_width=True)
+    
+    # Date vs CPC (Destination)
+    st.subheader("CPC (Destination) Over Time")
+    st.write("This chart depicts the Cost Per Click (CPC) for destination traffic over time. A lower CPC indicates more efficient ad spending.")
+    st.line_chart(df_ori.set_index('Date')['CPC (Destination)'], use_container_width=True)
+
+    # Date vs CPM
+    st.subheader("CPM Over Time")
+    st.write("This chart displays the Cost Per Mille (CPM), which represents the cost of acquiring 1,000 impressions. It's important for evaluating ad performance.")
+    st.line_chart(df_ori.set_index('Date')['CPM'], use_container_width=True)
+
+    # Date vs CTR (Destination)
+    st.subheader("CTR (Destination) Over Time")
+    st.write("This chart shows the Click-Through Rate (CTR) for destination traffic over time. A higher CTR suggests better ad engagement.")
+    st.line_chart(df_ori.set_index('Date')['CTR (Destination)'], use_container_width=True)
+
+elif menu == "Dataset":
+    
+    # Dataset Page
+    st.title("Dataset")
+    st.write("Here is the dataset used for the CPA prediction.")
+    st.dataframe(df_ori)
+
+elif menu == "Prediction":
+
+    st.write("""This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features (Cost, CPC (Destination), CPM, Impression, Clicks (Destination), CTR (Destination), Conversions, CPA) for the 4 days before tomorrow.
 """)
-st.write("""
+    st.write("""
 Enter the Cost, CPC (Destination), CPM, Impression, Clicks (Destination), CTR (Destination), Conversions, and CPA at Day 1 until Day 4 (Don't forget to recheck again before click the button!):
 """)
 # Create the input widgets for the new name
-new_name_inputs = []
-with st.form("cpa_form"):
-    for i in range(16):
-        day = (i // 4) + 1
-        metric = i % 4
-        if metric == 0:
-            metric = "Cost"
-        elif metric == 1:
-            metric = "CPC (Destination)"
-        elif metric == 2:
-            metric = "CPM"
-        else:
-            metric = "CTR (Destination)"
+    new_name_inputs = []
+    with st.form("cpa_form"):
+        for i in range(16):
+            day = (i // 4) + 1
+            metric = i % 4
+            if metric == 0:
+                metric = "Cost"
+            elif metric == 1:
+                metric = "CPC (Destination)"
+            elif metric == 2:
+                metric = "CPM"
+            else:
+                metric = "CTR (Destination)"
         
-        new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i+16}')
-        new_name_inputs.append(new_name_input)
-    if st.form_submit_button("Predict The CPA!"):
-        # Get the input values
-        new_name = np.array([float(new_name_input) for new_name_input in new_name_inputs]).reshape(-1, X_test.shape[1])
-        # Remaining code...
+            new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i+16}')
+            new_name_inputs.append(new_name_input)
+        if st.form_submit_button("Predict The CPA!"):
+            # Get the input values
+            new_name = np.array([float(new_name_input) for new_name_input in new_name_inputs]).reshape(-1, X_test.shape[1])
+            # Remaining code...
 
-        # Scale the input features
-        scaler = StandardScaler().fit(X_train_no_nan)
-        X_train_scaled = scaler.transform(X_train_no_nan)
-        X_test_scaled = scaler.transform(new_name)
+            # Scale the input features
+            scaler = StandardScaler().fit(X_train_no_nan)
+            X_train_scaled = scaler.transform(X_train_no_nan)
+            X_test_scaled = scaler.transform(new_name)
 
-        # Define the hyperparameter distribution
-        param_dist = {
-            'n_estimators': [10, 50, 100, 200, 500],
-            'max_depth': [None, 10, 20, 30, 40, 50],
-            'min_samples_split': [2, 5, 10, 20, 30],
-            'min_samples_leaf': [1, 2, 4, 8, 16]
-        }
+            # Define the hyperparameter distribution
+            param_dist = {
+                'n_estimators': [10, 50, 100, 200, 500],
+                'max_depth': [None, 10, 20, 30, 40, 50],
+                'min_samples_split': [2, 5, 10, 20, 30],
+                'min_samples_leaf': [1, 2, 4, 8, 16]
+            }
 
         # Initialize the Random Forest Regressor model
-        model = RandomForestRegressor(random_state=42)
+            model = RandomForestRegressor(random_state=42)
 
         # Perform hyperparameter tuning using RandomizedSearchCV
-        random_search = RandomizedSearchCV(estimator=model, param_distributions=param_dist, cv=5, scoring='neg_mean_squared_error', verbose=0, n_iter=20, random_state=42)
-        random_search.fit(X_train_scaled, y_train_no_nan)
+            random_search = RandomizedSearchCV(estimator=model, param_distributions=param_dist, cv=5, scoring='neg_mean_squared_error', verbose=0, n_iter=20, random_state=42)
+            random_search.fit(X_train_scaled, y_train_no_nan)
 
         # Extract the best model and fit it to the training data
-        best_model = random_search.best_estimator_
-        best_model.fit(X_train_scaled, y_train_no_nan)
+            best_model = random_search.best_estimator_
+            best_model.fit(X_train_scaled, y_train_no_nan)
 
         # Make predictions on the test data
-        y_pred = best_model.predict(X_test_scaled)
-        y_pred = np.round(y_pred, 0)
+            y_pred = best_model.predict(X_test_scaled)
+            y_pred = np.round(y_pred, 0)
 
         # Display the predictions in the sidebar
-        st.sidebar.write("Tomorrow's CPA Prediction:")
-        st.sidebar.write(y_pred)
+            st.sidebar.write("Tomorrow's CPA Prediction:")
+            st.sidebar.write(y_pred)
 
-st.write("""
-Please refresh the website if you want input new values
+    st.write("""
+    Please refresh the website if you want input new values
 """)
 
 	    
