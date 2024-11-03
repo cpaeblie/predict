@@ -4,13 +4,6 @@ name = "SmartExam Creator"
 icon = "📝"
 
 [[pages]]
-path = "pages/History.py"
-name = "Chat with PDF"
-icon = "📄"
-
-[[pages]]
 path = "pages/another_page.py"
-name = "Chat with Images"
-icon = "🖼️"
-
-
+name = "Another Page"
+icon = "📄"
