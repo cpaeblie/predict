@@ -9,7 +9,7 @@ name = "Chat with PDF"
 icon = "📄"
 
 [[pages]]
-path = "pages/Dataset.py"
+path = "pages/another_page.py"
 name = "Chat with Images"
 icon = "🖼️"
 
