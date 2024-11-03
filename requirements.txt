@@ -14,4 +14,7 @@ supabase>=2.0.0
 toml==0.10.2
 st-pages==0.4.3
 extra-streamlit-components==0.1.71
-
+python-dateutil==2.9.0.post0
+python-dotenv==1.0.1
+GitPython==3.1.43
+ipython==8.26.0
