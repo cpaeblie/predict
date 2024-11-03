@@ -1,4 +1,4 @@
 [[pages]]
-path = "cpapredict.py"
+path = "predict/cpapredict.py"
 name = "SmartExam Creator"
 icon = "📝"
