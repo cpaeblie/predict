@@ -8,7 +8,7 @@ scikit-learn==1.2.2  # Compatibility with numpy 1.24.x
 pytesseract==0.3.10
 opencv-python-headless==4.7.0.72
 Pillow==9.5.0
-setuptools>=42
+setuptools>=58.0.0
 wheel
 supabase>=2.0.0
 toml==0.10.2
