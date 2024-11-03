@@ -13,4 +13,5 @@ wheel
 supabase>=2.0.0
 toml==0.10.2
 st-pages==0.4.3
+extra-streamlit-components==0.1.71
 
