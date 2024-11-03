@@ -3,7 +3,7 @@ matplotlib==3.8.0
 numpy==1.24.4  # Downgrade to improve binary wheel compatibility
 pandas==2.0.3  # Compatible with numpy 1.24.x
 seaborn==0.12.2  # Compatible with matplotlib 3.8.0
-streamlit==1.26.0
+streamlit==1.37.0
 scikit-learn==1.2.2  # Compatibility with numpy 1.24.x
 pytesseract==0.3.10
 opencv-python-headless==4.7.0.72
