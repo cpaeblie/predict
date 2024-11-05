@@ -177,6 +177,10 @@ elif menu == "Dataset":
         plt.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
         plt.axvline(x=0, color='gray', linestyle='--', linewidth=0.5)
         plt.grid()
+	    
+
+        # Calculate correlation
+        correlation_value = df_ori[feature1].corr(df_ori[feature2])
 
     # Dataset Page
     st.title("Dataset")
