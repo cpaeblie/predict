@@ -178,13 +178,6 @@ elif menu == "Dataset":
         plt.axvline(x=0, color='gray', linestyle='--', linewidth=0.5)
         plt.grid()
 
-        # Show the plot in Streamlit
-        st.pyplot(plt)
-
-        # Calculate correlation
-        correlation_value = df_ori[feature1].corr(df_ori[feature2])
-        st.write(f"The correlation coefficient between **{feature1}** and **{feature2}** is **{correlation_value:.2f}**. This indicates a {'positive' if correlation_value > 0 else 'negative'} correlation.")
-
     # Dataset Page
     st.title("Dataset")
     st.write("Here is the dataset used for the CPA prediction.")
