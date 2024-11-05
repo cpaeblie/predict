@@ -152,49 +152,6 @@ if menu == "History":
     st.line_chart(df_ori.set_index('Date')['CTR (Destination)'], use_container_width=True)
 
 elif menu == "Dataset":
-	# Dataset Page
-    st.title("Dataset")
-    st.write("Here is the dataset used for the CPA prediction.")
-    st.dataframe(df_ori)
-	# Correlation Analysis
-    st.write("This section displays scatter plots illustrating the correlations between key features in the dataset.")
-
-    # Define the specific pairs to analyze
-    pairs = [
-        ('Cost', 'CPA'),
-        ('CPC (Destination)', 'CPA'),
-        ('CPM', 'CPA'),
-        ('CTR (Destination)', 'CPA')
-    ]
-    
-    for feature1, feature2 in pairs:
-        # Scatter plot
-        plt.figure(figsize=(10, 6))
-        sns.scatterplot(data=df_ori, x=feature1, y=feature2)
-        plt.title(f'Scatter Plot: {feature1} vs {feature2}')
-        plt.xlabel(feature1)
-        plt.ylabel(feature2)
-        plt.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
-        plt.axvline(x=0, color='gray', linestyle='--', linewidth=0.5)
-        plt.grid()
-
-        # Show the plot in Streamlit
-        st.pyplot(plt)
-
-        # Calculate correlation
-        correlation_value = df_ori[feature1].corr(df_ori[feature2])
-        st.write(f"The correlation coefficient between **{feature1}** and **{feature2}** is **{correlation_value:.2f}**. This indicates a {'positive' if correlation_value > 0 else 'negative'} correlation.")
-
-        # Additional descriptions for specific pairs
-        if feature1 == 'Cost' and feature2 == 'CPA':
-            st.write("This scatter plot shows the relationship between total Cost and Cost Per Acquisition (CPA). A positive correlation suggests that as total spending increases, the cost to acquire each customer may also increase.")
-        elif feature1 == 'CPC (Destination)' and feature2 == 'CPA':
-            st.write("This scatter plot illustrates the relationship between CPC and CPA. A positive correlation may imply that higher costs per click lead to higher costs per acquisition.")
-        elif feature1 == 'CPM' and feature2 == 'CPA':
-            st.write("This scatter plot shows the relationship between CPM and CPA. A positive correlation might suggest that as the cost per 1,000 impressions increases, the cost per acquisition also tends to increase.")
-        elif feature1 == 'CTR (Destination)' and feature2 == 'CPA':
-            st.write("This scatter plot illustrates the relationship between CTR and CPA. A negative correlation may suggest that as the click-through rate increases, the cost per acquisition decreases, indicating more effective spending.")
-
     # Dataset Page
     st.title("Dataset")
     st.write("Here is the dataset used for the CPA prediction.")
