@@ -152,11 +152,11 @@ if menu == "History":
     st.line_chart(df_ori.set_index('Date')['CTR (Destination)'], use_container_width=True)
 
 elif menu == "Dataset":
-    # Dataset Page
+	# Dataset Page
     st.title("Dataset")
     st.write("Here is the dataset used for the CPA prediction.")
     st.dataframe(df_ori)
-
+    
     # Correlation Analysis
     st.write("This section displays scatter plots illustrating the correlations between key features in the dataset.")
 
@@ -171,7 +171,7 @@ elif menu == "Dataset":
     for feature1, feature2 in pairs:
         # Scatter plot with regression line
         plt.figure(figsize=(10, 6))
-        sns.regplot(data=df_ori, x=feature1, y=feature2, scatter_kws={'alpha':0.5}, line_kws={'color':'red'})
+        sns.regplot(data=df_ori, x=feature1, y=feature2, scatter_kws={'alpha': 0.5}, line_kws={'color': 'red'})
         plt.title(f'Scatter Plot with Regression Line: {feature1} vs {feature2}')
         plt.xlabel(feature1)
         plt.ylabel(feature2)
@@ -194,8 +194,7 @@ elif menu == "Dataset":
         elif feature1 == 'CPM' and feature2 == 'CPA':
             st.write("This scatter plot shows the relationship between CPM and CPA. A positive correlation might suggest that as the cost per 1,000 impressions increases, the cost per acquisition also tends to increase.")
         elif feature1 == 'CTR (Destination)' and feature2 == 'CPA':
-            st.write("This scatter plot illustrates the relationship between CTR and CPA. A negative correlation may suggest that as the click-through rate increases, the cost per acquisition decreases, indicating more effective spending.")
-	    
+            st.write("This scatter plot illustrates the relationship between CTR and CPA. A negative correlation may suggest that as the click-through rate increases, the cost per acquisition decreases, indicating more effective spending.") 
 elif menu == "Prediction":
 
     st.write("""This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features Cost, CPC (Destination), CPM, CTR (Destination) for the 4 days before tomorrow.
