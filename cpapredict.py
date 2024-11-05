@@ -153,12 +153,6 @@ if menu == "History":
 
 elif menu == "Dataset":
 	# Dataset Page
-    st.title("Dataset")
-    st.write("Here is the dataset used for the CPA prediction.")
-    st.dataframe(df_ori)
-	# Correlation Analysis
-    st.write("This section displays scatter plots illustrating the correlations between key features in the dataset.")
-
     # Define the specific pairs to analyze
     pairs = [
         ('Cost', 'CPA'),
@@ -189,31 +183,6 @@ elif menu == "Dataset":
 
     # Correlation Analysis
     st.write("This section displays scatter plots illustrating the correlations between key features in the dataset.")
-
-    # Define the specific pairs to analyze
-    pairs = [
-        ('Cost', 'CPA'),
-        ('CPC (Destination)', 'CPA'),
-        ('CPM', 'CPA'),
-        ('CTR (Destination)', 'CPA')
-    ]
-
-    for feature1, feature2 in pairs:
-        # Scatter plot with regression line
-        plt.figure(figsize=(10, 6))
-        sns.regplot(data=df_ori, x=feature1, y=feature2, scatter_kws={'alpha':0.5}, line_kws={'color':'red'})
-        plt.title(f'Scatter Plot with Regression Line: {feature1} vs {feature2}')
-        plt.xlabel(feature1)
-        plt.ylabel(feature2)
-        plt.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
-        plt.axvline(x=0, color='gray', linestyle='--', linewidth=0.5)
-        plt.grid()
-
-        # Show the plot in Streamlit
-        st.pyplot(plt)
-
-        # Calculate correlation
-        correlation_value = df_ori[feature1].corr(df_ori[feature2])
         st.write(f"The correlation coefficient between **{feature1}** and **{feature2}** is **{correlation_value:.2f}**. This indicates a {'positive' if correlation_value > 0 else 'negative'} correlation.")
 
         # Additional descriptions for specific pairs
