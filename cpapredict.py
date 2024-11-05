@@ -119,6 +119,7 @@ st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
 st.title("CPA Prediction App 🔎")
 st.sidebar.title("Menu")
 menu = st.sidebar.selectbox("Select a page:", ["History", "Dataset", "Prediction"])
+df_filtered = df_ori[df_ori['Date'] <= df_ori['Date'].iloc[70]]  # Adjust this based on actual date format if needed
 
 if menu == "History":
     
@@ -129,27 +130,27 @@ if menu == "History":
     # Date vs CPA
     st.subheader("CPA Over Time")
     st.write("This chart shows the trend of Cost Per Acquisition (CPA) over the recorded dates. Analyzing CPA helps in understanding the effectiveness of marketing efforts.")
-    st.line_chart(df_ori.set_index('Date')['CPA'], use_container_width=True)
+    st.line_chart(df_filtered.set_index.set_index('Date')['CPA'], use_container_width=True)
     
     # Date vs Cost
     st.subheader("Cost Over Time")
     st.write("This chart illustrates the total Cost incurred over time. Monitoring cost trends is crucial for budget management.")
-    st.line_chart(df_ori.set_index('Date')['Cost'], use_container_width=True)
+    st.line_chart(df_filtered.set_index.set_index('Date')['Cost'], use_container_width=True)
     
     # Date vs CPC (Destination)
     st.subheader("CPC (Destination) Over Time")
     st.write("This chart depicts the Cost Per Click (CPC) for destination traffic over time. A lower CPC indicates more efficient ad spending.")
-    st.line_chart(df_ori.set_index('Date')['CPC (Destination)'], use_container_width=True)
+    st.line_chart(df_filtered.set_index.set_index('Date')['CPC (Destination)'], use_container_width=True)
 
     # Date vs CPM
     st.subheader("CPM Over Time")
     st.write("This chart displays the Cost Per Mille (CPM), which represents the cost of acquiring 1,000 impressions. It's important for evaluating ad performance.")
-    st.line_chart(df_ori.set_index('Date')['CPM'], use_container_width=True)
+    st.line_chart(df_filtered.set_index.set_index('Date')['CPM'], use_container_width=True)
 
     # Date vs CTR (Destination)
     st.subheader("CTR (Destination) Over Time")
     st.write("This chart shows the Click-Through Rate (CTR) for destination traffic over time. A higher CTR suggests better ad engagement.")
-    st.line_chart(df_ori.set_index('Date')['CTR (Destination)'], use_container_width=True)
+    st.line_chart(df_filtered.set_index.set_index('Date')['CTR (Destination)'], use_container_width=True)
 
 elif menu == "Dataset":
 # Dataset Page
