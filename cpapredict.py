@@ -183,7 +183,7 @@ elif menu == "Dataset":
 
     # Correlation Analysis
     st.write("This section displays scatter plots illustrating the correlations between key features in the dataset.")
-        st.write(f"The correlation coefficient between **{feature1}** and **{feature2}** is **{correlation_value:.2f}**. This indicates a {'positive' if correlation_value > 0 else 'negative'} correlation.")
+    st.write(f"The correlation coefficient between **{feature1}** and **{feature2}** is **{correlation_value:.2f}**. This indicates a {'positive' if correlation_value > 0 else 'negative'} correlation.")
 
         # Additional descriptions for specific pairs
         if feature1 == 'Cost' and feature2 == 'CPA':
