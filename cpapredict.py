@@ -185,15 +185,15 @@ elif menu == "Dataset":
     st.write("This section displays scatter plots illustrating the correlations between key features in the dataset.")
     st.write(f"The correlation coefficient between **{feature1}** and **{feature2}** is **{correlation_value:.2f}**. This indicates a {'positive' if correlation_value > 0 else 'negative'} correlation.")
 
-        # Additional descriptions for specific pairs
-        if feature1 == 'Cost' and feature2 == 'CPA':
-            st.write("This scatter plot shows the relationship between total Cost and Cost Per Acquisition (CPA). A positive correlation suggests that as total spending increases, the cost to acquire each customer may also increase.")
-        elif feature1 == 'CPC (Destination)' and feature2 == 'CPA':
-            st.write("This scatter plot illustrates the relationship between CPC and CPA. A positive correlation may imply that higher costs per click lead to higher costs per acquisition.")
-        elif feature1 == 'CPM' and feature2 == 'CPA':
-            st.write("This scatter plot shows the relationship between CPM and CPA. A positive correlation might suggest that as the cost per 1,000 impressions increases, the cost per acquisition also tends to increase.")
-        elif feature1 == 'CTR (Destination)' and feature2 == 'CPA':
-            st.write("This scatter plot illustrates the relationship between CTR and CPA. A negative correlation may suggest that as the click-through rate increases, the cost per acquisition decreases, indicating more effective spending.")
+    # Additional descriptions for specific pairs
+    if feature1 == 'Cost' and feature2 == 'CPA':
+        st.write("This scatter plot shows the relationship between total Cost and Cost Per Acquisition (CPA). A positive correlation suggests that as total spending increases, the cost to acquire each customer may also increase.")
+    elif feature1 == 'CPC (Destination)' and feature2 == 'CPA':
+        st.write("This scatter plot illustrates the relationship between CPC and CPA. A positive correlation may imply that higher costs per click lead to higher costs per acquisition.")
+    elif feature1 == 'CPM' and feature2 == 'CPA':
+        st.write("This scatter plot shows the relationship between CPM and CPA. A positive correlation might suggest that as the cost per 1,000 impressions increases, the cost per acquisition also tends to increase.")
+    elif feature1 == 'CTR (Destination)' and feature2 == 'CPA':
+        st.write("This scatter plot illustrates the relationship between CTR and CPA. A negative correlation may suggest that as the click-through rate increases, the cost per acquisition decreases, indicating more effective spending.")
 	    
 elif menu == "Prediction":
 
