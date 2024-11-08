@@ -62,6 +62,15 @@ def stats_features(input_data):
     return inp
 import pandas as pd
 zymuno_df = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/main/ad%20final.csv', delimiter=',')
+ads_1 = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/refs/heads/main/ads_1.csv', delimiter=',')
+ads_2 = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/refs/heads/main/ads_2.csv', delimiter=',')
+ads_4 = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/refs/heads/main/ads_4.csv', delimiter=',')
+ads_5 = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/refs/heads/main/ads_5.csv', delimiter=',')
+ads_6 = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/refs/heads/main/ads_6.csv', delimiter=',')
+ads_7 = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/refs/heads/main/ads_7.csv', delimiter=',')
+ads_8 = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/refs/heads/main/ads_8.csv', delimiter=',')
+ads_9 = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/refs/heads/main/ads_9.csv', delimiter=',')
+ads_10 = pd.read_csv('https://raw.githubusercontent.com/cpaeblie/predik/refs/heads/main/ads_10.csv', delimiter=',')
 df_ori = zymuno_df
 df_ori['Date'] = pd.to_datetime(df_ori['Date'])
 df_X = df_ori[['Cost','CPC (Destination)','CPM','CTR (Destination)','CPA']]
@@ -122,34 +131,53 @@ menu = st.sidebar.selectbox("Select a page:", ["History", "Dataset", "Prediction
 df_filtered = df_ori[df_ori['Date'] <= df_ori['Date'].iloc[70]]  # Adjust this based on actual date format if needed
 
 if menu == "History":
-    
+
     # History Page
     st.title("History")
     st.write("This section displays line charts of each column in the dataset, providing insights into trends over time.")
 
+    # Dropdown to select dataset
+    dataset_options = {
+        "First Ads": ads_1,
+        "Second Ads": ads_2,
+	"Third Ads": zymuno_df,
+        "Fourth Ads": ads_4,
+        "Fifth Ads": ads_5,
+        "Sixth Ads": ads_6,
+        "Seventh Ads": ads_7,
+        "Eighth Ads": ads_8,
+        "Ninth Ads": ads_9,
+        "Tenth Ads": ads_10
+    }
+
+    selected_dataset = st.selectbox("Select Dataset", list(dataset_options.keys()))
+
+    # Filtered DataFrame based on selection
+    df_filtered = dataset_options[selected_dataset]
+
     # Date vs CPA
     st.subheader("CPA Over Time")
-    st.write("This chart shows the trend of Cost Per Acquisition (CPA) over the recorded dates. Analyzing CPA helps in understanding the effectiveness of marketing efforts.")
+    st.write("This chart shows the trend of Cost Per Acquisition (CPA) over the recorded dates.")
     st.line_chart(df_filtered.set_index('Date')['CPA'], use_container_width=True)
-    
+
     # Date vs Cost
     st.subheader("Cost Over Time")
-    st.write("This chart illustrates the total Cost incurred over time. Monitoring cost trends is crucial for budget management.")
+    st.write("This chart illustrates the total Cost incurred over time.")
     st.line_chart(df_filtered.set_index('Date')['Cost'], use_container_width=True)
-    
+
     # Date vs CPC (Destination)
     st.subheader("CPC (Destination) Over Time")
-    st.write("This chart depicts the Cost Per Click (CPC) for destination traffic over time. A lower CPC indicates more efficient ad spending.")
+    st.write("This chart depicts the Cost Per Click (CPC) for destination traffic over time.")
     st.line_chart(df_filtered.set_index('Date')['CPC (Destination)'], use_container_width=True)
 
     # Date vs CPM
     st.subheader("CPM Over Time")
-    st.write("This chart displays the Cost Per Mille (CPM), which represents the cost of acquiring 1,000 impressions. It's important for evaluating ad performance.")
+    st.write("This chart displays the Cost Per Mille (CPM).")
     st.line_chart(df_filtered.set_index('Date')['CPM'], use_container_width=True)
 
     # Date vs CTR (Destination)
     st.subheader("CTR (Destination) Over Time")
-    st.write("This chart shows the Click-Through Rate (CTR) for destination traffic over time. A higher CTR suggests better ad engagement.")
+    st.write("This chart shows the Click-Through Rate (CTR) for destination traffic over time.")
     st.line_chart(df_filtered.set_index('Date')['CTR (Destination)'], use_container_width=True)
 
 elif menu == "Dataset":
