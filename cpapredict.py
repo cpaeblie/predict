@@ -138,6 +138,7 @@ if menu == "History":
     dataset_options = {
         "First Ads": ads_1,
         "Second Ads": ads_2,
+	"Third Ads": zymuno_df,
         "Fourth Ads": ads_4,
         "Fifth Ads": ads_5,
         "Sixth Ads": ads_6,
@@ -159,6 +160,7 @@ if menu == "History":
     day_limits = {
         "First Ads": 123,
         "Second Ads": 110,
+	"Third Ads": 70,
         "Fourth Ads": 75,
         "Fifth Ads": 72,
         "Sixth Ads": 70,
