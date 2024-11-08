@@ -197,34 +197,30 @@ if menu == "History":
     st.line_chart(df_filtered.set_index('Date')['CTR (Destination)'], use_container_width=True)
 	
 elif menu == "Dataset":
-# Dataset Page
-    # Define the specific pairs to analyze
-    pairs = [
-        ('Cost', 'CPA'),
-        ('CPC (Destination)', 'CPA'),
-        ('CPM', 'CPA'),
-        ('CTR (Destination)', 'CPA')
-    ]
-    
-    for feature1, feature2 in pairs:
-        # Scatter plot
-        plt.figure(figsize=(10, 6))
-        sns.scatterplot(data=df_ori, x=feature1, y=feature2)
-        plt.title(f'Scatter Plot: {feature1} vs {feature2}')
-        plt.xlabel(feature1)
-        plt.ylabel(feature2)
-        plt.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
-        plt.axvline(x=0, color='gray', linestyle='--', linewidth=0.5)
-        plt.grid()
-
-
-        # Calculate correlation
-        correlation_value = df_ori[feature1].corr(df_ori[feature2])
-
-
     # Dataset Page
     st.title("Dataset")
     st.write("Here is the dataset used for the CPA prediction.")
+
+    # Dropdown to select dataset for analysis
+    dataset_options = {
+        "First Ads": ads_1,
+        "Second Ads": ads_2,
+        "Fourth Ads": ads_4,
+        "Fifth Ads": ads_5,
+        "Sixth Ads": ads_6,
+        "Seventh Ads": ads_7,
+                "Eighth Ads": ads_8,
+        "Ninth Ads": ads_9,
+        "Tenth Ads": ads_10
+    }
+
+    # Dropdown to select dataset
+    selected_dataset = st.selectbox("Select Dataset", list(dataset_options.keys()))
+
+    # Filtered DataFrame based on selection
+    df_ori = dataset_options[selected_dataset]
+
+    # Display the selected dataset
     st.dataframe(df_ori)
 
     # Correlation Analysis
@@ -241,7 +237,7 @@ elif menu == "Dataset":
     for feature1, feature2 in pairs:
         # Scatter plot with regression line
         plt.figure(figsize=(10, 6))
-        sns.regplot(data=df_ori, x=feature1, y=feature2, scatter_kws={'alpha':0.5}, line_kws={'color':'red'})
+        sns.regplot(data=df_ori, x=feature1, y=feature2, scatter_kws={'alpha': 0.5}, line_kws={'color': 'red'})
         plt.title(f'Scatter Plot with Regression Line: {feature1} vs {feature2}')
         plt.xlabel(feature1)
         plt.ylabel(feature2)
