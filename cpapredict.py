@@ -161,7 +161,7 @@ if menu == "History":
     st.line_chart(df_filtered.set_index('Date')['CPA'], use_container_width=True)
 
     # Date vs Cost
-    st.subheader("Cost Over Time")
+    st.subheader("Cost Over Timeeeeee")
     st.write("This chart illustrates the total Cost incurred over time.")
     st.line_chart(df_filtered.set_index('Date')['Cost'], use_container_width=True)
 
