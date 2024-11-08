@@ -128,10 +128,8 @@ st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
 st.title("CPA Prediction App 🔎")
 st.sidebar.title("Menu")
 menu = st.sidebar.selectbox("Select a page:", ["History", "Dataset", "Prediction"])
-df_filtered = df_ori[df_ori['Date'] <= df_ori['Date'].iloc[70]]  # Adjust this based on actual date format if needed
 
 if menu == "History":
-
     # History Page
     st.title("History")
     st.write("This section displays line charts of each column in the dataset, providing insights into trends over time.")
@@ -140,7 +138,6 @@ if menu == "History":
     dataset_options = {
         "First Ads": ads_1,
         "Second Ads": ads_2,
-	"Third Ads": zymuno_df,
         "Fourth Ads": ads_4,
         "Fifth Ads": ads_5,
         "Sixth Ads": ads_6,
@@ -155,31 +152,48 @@ if menu == "History":
     # Filtered DataFrame based on selection
     df_filtered = dataset_options[selected_dataset]
 
+    # Ensure 'Date' column is in datetime format
+    df_filtered['Date'] = pd.to_datetime(df_filtered['Date'])
+
+    # Apply filter based on the selected dataset's specific day limit
+    day_limits = {
+        "First Ads": 123,
+        "Second Ads": 110,
+        "Fourth Ads": 75,
+        "Fifth Ads": 72,
+        "Sixth Ads": 70,
+        "Seventh Ads": 61,
+        "Eighth Ads": 60,
+        "Ninth Ads": 47,
+        "Tenth Ads": 49
+    }
+
+    # Get the limit for the selected dataset
+    limit_days = day_limits.get(selected_dataset, 70)  # Default to 70 if not found
+
+    # Filter to limit the DataFrame based on the specified number of days
+    df_filtered = df_filtered.iloc[:limit_days]
+
     # Date vs CPA
     st.subheader("CPA Over Time")
-    st.write("This chart shows the trend of Cost Per Acquisition (CPA) over the recorded dates.")
     st.line_chart(df_filtered.set_index('Date')['CPA'], use_container_width=True)
 
     # Date vs Cost
-    st.subheader("Cost Over Timeeeeee")
-    st.write("This chart illustrates the total Cost incurred over time.")
+    st.subheader("Cost Over Time")
     st.line_chart(df_filtered.set_index('Date')['Cost'], use_container_width=True)
 
     # Date vs CPC (Destination)
     st.subheader("CPC (Destination) Over Time")
-    st.write("This chart depicts the Cost Per Click (CPC) for destination traffic over time.")
     st.line_chart(df_filtered.set_index('Date')['CPC (Destination)'], use_container_width=True)
 
     # Date vs CPM
     st.subheader("CPM Over Time")
-    st.write("This chart displays the Cost Per Mille (CPM).")
     st.line_chart(df_filtered.set_index('Date')['CPM'], use_container_width=True)
 
     # Date vs CTR (Destination)
     st.subheader("CTR (Destination) Over Time")
-    st.write("This chart shows the Click-Through Rate (CTR) for destination traffic over time.")
     st.line_chart(df_filtered.set_index('Date')['CTR (Destination)'], use_container_width=True)
-
+	
 elif menu == "Dataset":
 # Dataset Page
     # Define the specific pairs to analyze
