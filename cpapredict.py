@@ -158,16 +158,16 @@ if menu == "History":
 
     # Apply filter based on the selected dataset's specific day limit
     day_limits = {
-        "First Ads": 124,
-        "Second Ads": 111,
+        "First Ads": 123,
+        "Second Ads": 110,
 	"Third Ads": 71,
-        "Fourth Ads": 76,
-        "Fifth Ads": 73,
-        "Sixth Ads": 71,
-        "Seventh Ads": 62,
-        "Eighth Ads": 61,
-        "Ninth Ads": 48,
-        "Tenth Ads": 50
+        "Fourth Ads": 75,
+        "Fifth Ads": 72,
+        "Sixth Ads": 70,
+        "Seventh Ads": 61,
+        "Eighth Ads": 60,
+        "Ninth Ads": 47,
+        "Tenth Ads": 49
     }
 
     # Get the limit for the selected dataset
