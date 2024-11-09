@@ -136,16 +136,16 @@ if menu == "History":
 
     # Dropdown to select dataset
     dataset_options = {
-        "First Ads": ads_1,
-        "Second Ads": ads_2,
-	"Third Ads": zymuno_df,
-        "Fourth Ads": ads_4,
-        "Fifth Ads": ads_5,
-        "Sixth Ads": ads_6,
-        "Seventh Ads": ads_7,
-        "Eighth Ads": ads_8,
-        "Ninth Ads": ads_9,
-        "Tenth Ads": ads_10
+        "First Ad": ads_1,
+        "Second Ad": ads_2,
+	"Third Ad": zymuno_df,
+        "Fourth Ad": ads_4,
+        "Fifth Ad": ads_5,
+        "Sixth Ad": ads_6,
+        "Seventh Ad": ads_7,
+        "Eighth Ad": ads_8,
+        "Ninth Ad": ads_9,
+        "Tenth Ad": ads_10
     }
 
     selected_dataset = st.selectbox("Select Dataset", list(dataset_options.keys()))
@@ -158,16 +158,16 @@ if menu == "History":
 
     # Apply filter based on the selected dataset's specific day limit
     day_limits = {
-        "First Ads": 123,
-        "Second Ads": 110,
-	"Third Ads": 71,
-        "Fourth Ads": 75,
-        "Fifth Ads": 72,
-        "Sixth Ads": 70,
-        "Seventh Ads": 61,
-        "Eighth Ads": 60,
-        "Ninth Ads": 47,
-        "Tenth Ads": 49
+        "First Ad": 123,
+        "Second Ad": 110,
+	"Third Ad": 71,
+        "Fourth Ad": 75,
+        "Fifth Ad": 72,
+        "Sixth Ad": 70,
+        "Seventh Ad": 61,
+        "Eighth Ad": 60,
+        "Ninth Ad": 47,
+        "Tenth Ad": 49
     }
 
     # Get the limit for the selected dataset
@@ -203,16 +203,16 @@ elif menu == "Dataset":
 
     # Dropdown to select dataset for analysis
     dataset_options = {
-        "First Ads": ads_1,
-        "Second Ads": ads_2,
-	"Third Ads": zymuno_df,
-        "Fourth Ads": ads_4,
-        "Fifth Ads": ads_5,
-        "Sixth Ads": ads_6,
-        "Seventh Ads": ads_7,
-        "Eighth Ads": ads_8,
-        "Ninth Ads": ads_9,
-        "Tenth Ads": ads_10
+        "First Ad": ads_1,
+        "Second Ad": ads_2,
+	"Third Ad": zymuno_df,
+        "Fourth Ad": ads_4,
+        "Fifth Ad": ads_5,
+        "Sixth Ad": ads_6,
+        "Seventh Ad": ads_7,
+        "Eighth Ad": ads_8,
+        "Ninth Ad": ads_9,
+        "Tenth Ad": ads_10
     }
 
     # Dropdown to select dataset
@@ -244,7 +244,6 @@ elif menu == "Dataset":
         plt.ylabel(feature2)
         plt.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
         plt.axvline(x=0, color='gray', linestyle='--', linewidth=0.5)
-        plt.grid()
 
         # Show the plot in Streamlit
         st.pyplot(plt)
