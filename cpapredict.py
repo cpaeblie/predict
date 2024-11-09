@@ -199,7 +199,7 @@ if menu == "History":
 elif menu == "Dataset":
     # Dataset Page
     st.title("Dataset")
-    st.write("Here is the dataset used for the CPA prediction.")
+    st.write("This section provides an overview of the datasets used for analysis, allowing users to select and explore the data for deeper insights.")
 
     # Dropdown to select dataset for analysis
     dataset_options = {
