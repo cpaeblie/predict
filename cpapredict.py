@@ -263,7 +263,7 @@ elif menu == "Dataset":
             st.write("This scatter plot illustrates the relationship between CTR and CPA. A positive correlation suggests that as the click-through rate increases, the cost per acquisition also increases. This may indicate that while more users are engaging with the ad, the quality of those clicks may not be leading to conversions at a lower cost, or that higher engagement is associated with higher-cost campaigns.")
 	      	    
 elif menu == "Prediction":
-
+    st.title("Prediction")
     st.write("""This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features Cost, CPC (Destination), CPM, CTR (Destination) for the 4 days before tomorrow.
 """)
     st.write("""
