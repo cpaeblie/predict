@@ -124,7 +124,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import RandomizedSearchCV
 # Create the title and description
-st.set_page_config(page_title="CPA Prediction App", page_icon="🔎")
+st.set_page_config(page_title="CPA Prediction App", page_icon="🔎", layout="wide")
 st.title("CPA Prediction App 🔎")
 st.sidebar.title("Menu")
 menu = st.sidebar.selectbox("Select a page:", ["History", "Dataset", "Prediction"])
