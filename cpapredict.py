@@ -274,7 +274,7 @@ Enter the Cost, CPC (Destination), CPM, CTR (Destination) at Day 1 until Day 5:
     with st.form("cpa_form"):
         for i in range(20):
             day = (i // 5) + 1
-            metric = i % 4
+            metric = i % 5
             if metric == 0:
                 metric = "Cost"
             elif metric == 1:
