@@ -84,7 +84,7 @@ in_seq = df_X.astype(float).values
 #dataset = hstack((in_seq1, out_seq))
 
 
-n_steps_in, n_steps_out = 4, 1
+n_steps_in, n_steps_out = 5, 1
 X, y = split_sequences(in_seq, n_steps_in, n_steps_out)
 
 n_input = X.shape[1] * X.shape[2]
@@ -272,7 +272,7 @@ Enter the Cost, CPC (Destination), CPM, CTR (Destination) at Day 1 until Day 4:
 # Create the input widgets for the new name
     new_name_inputs = []
     with st.form("cpa_form"):
-        for i in range(16):
+        for i in range(20):
             day = (i // 4) + 1
             metric = i % 4
             if metric == 0:
@@ -284,7 +284,7 @@ Enter the Cost, CPC (Destination), CPM, CTR (Destination) at Day 1 until Day 4:
             else:
                 metric = "CTR (Destination)"
         
-            new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i+16}')
+            new_name_input = st.text_input(label=f'{metric} at Day {day}:', key=f'input_{i+20}')
             new_name_inputs.append(new_name_input)
         if st.form_submit_button("Predict The CPA!"):
             # Get the input values
