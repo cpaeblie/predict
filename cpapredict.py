@@ -296,27 +296,12 @@ Enter the Cost, CPC (Destination), CPM, CTR (Destination) at Day 1 until Day 4:
             X_train_scaled = scaler.transform(X_train_no_nan)
             X_test_scaled = scaler.transform(new_name)
 
-            # Define the hyperparameter distribution
-            param_dist = {
-                'n_estimators': [10, 50, 100, 200, 500],
-                'max_depth': [None, 10, 20, 30, 40, 50],
-                'min_samples_split': [2, 5, 10, 20, 30],
-                'min_samples_leaf': [1, 2, 4, 8, 16]
-            }
-
         # Initialize the Random Forest Regressor model
             model = RandomForestRegressor(random_state=42)
-
-        # Perform hyperparameter tuning using RandomizedSearchCV
-            random_search = RandomizedSearchCV(estimator=model, param_distributions=param_dist, cv=5, scoring='neg_mean_squared_error', verbose=0, n_iter=20, random_state=42)
-            random_search.fit(X_train_scaled, y_train_no_nan)
-
-        # Extract the best model and fit it to the training data
-            best_model = random_search.best_estimator_
-            best_model.fit(X_train_scaled, y_train_no_nan)
+            model.fit(X_train_scaled, y_train_no_nan)
 
         # Make predictions on the test data
-            y_pred = best_model.predict(X_test_scaled)
+            y_pred = model.predict(X_test_scaled)
             y_pred = np.round(y_pred, 0)
 
         # Display the predictions in the sidebar
