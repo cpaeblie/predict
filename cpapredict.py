@@ -264,10 +264,10 @@ elif menu == "Dataset":
 	      	    
 elif menu == "Prediction":
     st.title("Prediction")
-    st.write("""This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features Cost, CPC (Destination), CPM, CTR (Destination) for the 4 days before tomorrow.
+    st.write("""This is a CPA Prediction App that uses machine learning algorithms to predict the Cost Per Acquisition (CPA) for a given set of input features Cost, CPC (Destination), CPM, CTR (Destination) for the 5 days before tomorrow.
 """)
     st.write("""
-Enter the Cost, CPC (Destination), CPM, CTR (Destination) at Day 1 until Day 4:
+Enter the Cost, CPC (Destination), CPM, CTR (Destination) at Day 1 until Day 5:
 """)
 # Create the input widgets for the new name
     new_name_inputs = []
